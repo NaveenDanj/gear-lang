@@ -1,0 +1,14 @@
+start
+
+    import 'test2.ger';
+
+    let int val1 = ( 10 + 11) + 23 + myVar;
+    let int val2 = 20;
+    let int out = val1 +val2;
+    let boolean flag = (true || false);
+    let real r = 3.12;
+    let string name = ('My name is naveen' + 'hi') + 'Naveen Dhananjaya Hettiwaththa';
+    
+    print out;
+
+end
