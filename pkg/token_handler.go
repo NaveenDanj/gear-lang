@@ -30,6 +30,8 @@ func (t *TokenDriver) Init() {
 		"function",
 		"export",
 		"import",
+		"if",
+		"else",
 	}
 
 	t.Operators = make(map[string]int)
@@ -65,6 +67,7 @@ func (t *TokenDriver) ParseTokens(lexemeList []Lexeme) {
 
 	for i < len(lexemeList) {
 		lex := lexemeList[i]
+		str += lex.Value
 
 		if lex.LexType == "NEWLINE" ||
 			lex.LexType == "WHITESPACE" {
@@ -76,23 +79,13 @@ func (t *TokenDriver) ParseTokens(lexemeList []Lexeme) {
 				continue
 			}
 
-			isID := checkAndParseIdentifier(str, lexemeList, i, t)
+			isID := checkAndParseIdentifier(str, t)
 
 			if isID {
 				str = ""
 				i += 1
 				continue
 			}
-
-		} else if t.Operators[lex.LexType] != 0 {
-			new_token := Token{
-				Type:  lex.LexType,
-				Value: lex.Value,
-			}
-			t.TokenList = append(t.TokenList, new_token)
-			str = ""
-			i += 1
-			continue
 
 		} else if IsDigit(lex.Value) {
 			isNumeric, out_index := checkAndParseNumericLiteral(lexemeList, i, t)
@@ -112,11 +105,10 @@ func (t *TokenDriver) ParseTokens(lexemeList []Lexeme) {
 				continue
 			}
 
-		} else if str+lex.Value == "true" || str+lex.Value == "false" {
-			fmt.Println("token is => ", str)
+		} else if str == "true" || str == "false" {
 			new_token := Token{
 				Type:  "BOOLEAN_LITERAL",
-				Value: str + lex.Value,
+				Value: str,
 			}
 			t.TokenList = append(t.TokenList, new_token)
 			str = ""
@@ -127,7 +119,15 @@ func (t *TokenDriver) ParseTokens(lexemeList []Lexeme) {
 			lex.LexType == "COMMA" ||
 			lex.LexType == "RIGHT_PARANTHESES" ||
 			lex.LexType == "LEFT_PARANTHESES" ||
+			lex.LexType == "PIPE" ||
+			lex.LexType == "WHITESPACE" ||
+			t.Operators[lex.LexType] != 0 ||
 			lex.LexType == "SEMICOLON" {
+
+			if CheckIsIdentifier(str) {
+				checkAndParseIdentifier(str, t)
+			}
+
 			new_token := Token{
 				Type:  lex.LexType,
 				Value: lex.Value,
@@ -138,9 +138,8 @@ func (t *TokenDriver) ParseTokens(lexemeList []Lexeme) {
 			continue
 		}
 
-		str += lex.Value
+		fmt.Println("Out => " + str)
 		i += 1
-		fmt.Println("out => " + str)
 	}
 
 	removeEmptyTokens(t)
@@ -158,7 +157,6 @@ func (t *TokenDriver) ParseTokens(lexemeList []Lexeme) {
 func checkAndParseKeyword(str string, t *TokenDriver) bool {
 	str = strings.ReplaceAll(str, " ", "")
 	str = strings.ReplaceAll(str, "\n", "")
-	fmt.Println("found keyword ====>" + str + "have space?")
 	isKeyword := CheckPrevLexemesKeyword(str, t.KeyWordList)
 	if isKeyword {
 		new_token := Token{
@@ -173,9 +171,34 @@ func checkAndParseKeyword(str string, t *TokenDriver) bool {
 
 }
 
-func checkAndParseIdentifier(str string, lexemeList []Lexeme, index int, t *TokenDriver) bool {
+func checkAndParseIdentifier(str string, t *TokenDriver) bool {
+	fmt.Println("Possobile identifier : " + str)
+
+	if len(str) == 0 {
+		return false
+	}
+
 	if str[0] == ' ' || t.Numbers[str[0]] != 0 {
 		return false
+	}
+
+	valid := make(map[byte]int)
+	valid['}'] = 1
+	valid[')'] = 1
+	valid[']'] = 1
+	valid[';'] = 1
+	valid[','] = 1
+	valid['+'] = 1
+	valid['-'] = 1
+	valid['*'] = 1
+	valid['/'] = 1
+	valid[' '] = 1
+
+	if valid[str[len(str)-1]] == 0 {
+		return false
+	} else {
+		// remove the last character
+		str = str[:len(str)-1]
 	}
 
 	new_token := Token{

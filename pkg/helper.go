@@ -67,5 +67,27 @@ func IsLetter(char string) bool {
 }
 
 func CheckIsIdentifier(str string) bool {
+
+	valid := make(map[byte]int)
+	valid['}'] = 1
+	valid[')'] = 1
+	valid[']'] = 1
+	valid[';'] = 1
+	valid[','] = 1
+	valid['+'] = 1
+	valid['-'] = 1
+	valid['*'] = 1
+	valid['/'] = 1
+	valid[' '] = 1
+
+	if len(str) == 0 {
+		return false
+	}
+
+	if valid[str[len(str)-1]] == 0 {
+		return false
+	}
+
 	return true
+
 }
