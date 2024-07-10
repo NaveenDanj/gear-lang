@@ -2,13 +2,13 @@ package pkg
 
 import (
 	"fmt"
-	"gear-lang/nodes"
+	"gear-lang/pkg/lib"
 )
 
 type ASTBuilder struct {
 	CurrentStatementIndex int
-	nodes.Program
-	TokenList []Token
+	Program               lib.Program
+	TokenList             []Token
 }
 
 func (ast *ASTBuilder) Parse(index int) {
@@ -17,7 +17,7 @@ func (ast *ASTBuilder) Parse(index int) {
 
 	if len(ast.TokenList) == 0 || ast.CurrentStatementIndex == len(ast.TokenList)-1 {
 
-		for _, item := range ast.Statements {
+		for _, item := range ast.Program.Statements {
 			fmt.Printf("%#v\n", item)
 		}
 
@@ -41,14 +41,19 @@ func (ast *ASTBuilder) handleKeyword(keyword string) {
 		index, newStatement := handleVariableDeclarationStatement(ast.TokenList, ast.CurrentStatementIndex)
 		ast.Program.Statements = append(ast.Program.Statements, newStatement)
 		ast.CurrentStatementIndex = index
-	default "print":
-		// Handle other keywords as needed
+	case "print":
+		index, newStatement := handlePrintStatement(ast.TokenList, ast.CurrentStatementIndex)
+		ast.Program.Statements = append(ast.Program.Statements, newStatement)
+		ast.CurrentStatementIndex = index
+	default:
+		fmt.Printf("Unhandled keyword: %s\n", keyword)
+		// panic("Error: Unhandled keyword")
 		ast.CurrentStatementIndex += 1
 	}
 
 }
 
-func handleVariableDeclarationStatement(tokenList []Token, index int) (int, nodes.Statement) {
+func handleVariableDeclarationStatement(tokenList []Token, index int) (int, lib.Statement) {
 
 	dataType := tokenList[index+1].Value
 	varName := tokenList[index+2].Value
@@ -62,13 +67,13 @@ func handleVariableDeclarationStatement(tokenList []Token, index int) (int, node
 
 	// TODO: have to handle expression strings
 
-	newLetStatement := nodes.LetStatement{
+	newLetStatement := lib.LetStatement{
 		VariableName: varName,
 		DataType:     dataType,
 		Expression:   nil,
 	}
 
-	newStatement := nodes.Statement{
+	newStatement := lib.Statement{
 		StatementType: "VARIABLE_DECLARATION",
 		Value:         newLetStatement,
 	}
@@ -77,24 +82,27 @@ func handleVariableDeclarationStatement(tokenList []Token, index int) (int, node
 
 }
 
-
-func handlePrintStatement(tokenList []Token, index int) (int, nodes.Statement) {
+func handlePrintStatement(tokenList []Token, index int) (int, lib.Statement) {
 	expressionStr := ""
-    counter := index + 1
+	counter := index + 1
 
-    for i := index + 1; i < len(tokenList) && tokenList[i].Type!= "SEMICOLON"; i++ {
-        expressionStr += tokenList[i].Value
-        counter += 1
-    }
+	for i := index + 1; i < len(tokenList) && tokenList[i].Type != "SEMICOLON"; i++ {
+		expressionStr += tokenList[i].Value
+		counter += 1
+	}
 
-    newPrintStatement := nodes.PrintStatement{
-        Expression: expressionStr,
-    }
+	newPrintStatement := lib.PrintStatement{
+		Expression: expressionStr,
+	}
 
-    newStatement := nodes.Statement{
-        StatementType: "PRINT",
-        Value:         newPrintStatement,
-    }
+	newStatement := lib.Statement{
+		StatementType: "PRINT",
+		Value:         newPrintStatement,
+	}
 
-    return counter, newStatement
+	return counter, newStatement
 }
+
+// func handleImportStatement(tokenList []Token, index int) (int, nodes.Statement) {
+// 	return 1
+// }

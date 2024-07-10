@@ -155,7 +155,7 @@ func (d *LexemeDriver) CheckLexeme(char string) {
 
 		new_lex := Lexeme{
 			LexType: "AND_OPERATOR",
-			Value:   "&",
+			Value:   "|",
 		}
 
 		d.LexList = append(d.LexList, new_lex)

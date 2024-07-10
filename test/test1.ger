@@ -10,7 +10,7 @@ start
     let string name = ('My name is naveen'+'hi') + 'Naveen Dhananjaya Hettiwaththa';
     
     if(flag == true) {
-        print 'flag is true';
+        print 'flag is true' + ' ' + name;
     }else{
         print 'flag is false';
     }
