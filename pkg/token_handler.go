@@ -75,7 +75,7 @@ func (t *TokenDriver) Init() {
 	t.Validator[' '] = 1
 }
 
-func (t *TokenDriver) ParseTokens(lexemeList []Lexeme) {
+func (t *TokenDriver) Tokenizer(lexemeList []Lexeme) {
 
 	// var prev_lexemes []Lexeme
 	i := 0
@@ -165,7 +165,6 @@ func (t *TokenDriver) ParseTokens(lexemeList []Lexeme) {
 			continue
 		}
 
-		fmt.Println("Out => " + str)
 		i += 1
 	}
 

@@ -24,9 +24,10 @@ func main() {
 		driver.CheckLexeme(string(content_string[i]))
 	}
 
-	// do the token parsing
 	tokenDriver := pkg.TokenDriver{}
+	astBuilder := pkg.ASTBuilder{}
 	tokenDriver.Init()
-	tokenDriver.ParseTokens(driver.LexList)
-
+	tokenDriver.Tokenizer(driver.LexList)
+	astBuilder.TokenList = tokenDriver.TokenList
+	astBuilder.Parse(0)
 }
