@@ -14,6 +14,7 @@ type TokenDriver struct {
 	KeyWordList [30]string
 	Operators   map[string]int
 	Numbers     map[byte]int
+	Validator   map[byte]int
 }
 
 func (t *TokenDriver) Init() {
@@ -42,6 +43,9 @@ func (t *TokenDriver) Init() {
 	t.Operators["MULTIPLY_OPERATOR"] = 1
 	t.Operators["DIVIDE_OPERATOR"] = 1
 	t.Operators["DOT_OPERATOR"] = 1
+	t.Operators["DOT_OPERATOR"] = 1
+	t.Operators["PIPE_OPERATOR"] = 1
+	t.Operators["AND_OPERATOR"] = 1
 
 	t.Numbers = make(map[byte]int)
 
@@ -56,6 +60,19 @@ func (t *TokenDriver) Init() {
 	t.Numbers['8'] = 1
 	t.Numbers['9'] = 1
 
+	t.Validator = make(map[byte]int)
+	t.Validator['}'] = 1
+	t.Validator['{'] = 1
+	t.Validator[')'] = 1
+	t.Validator['('] = 1
+	t.Validator[']'] = 1
+	t.Validator[';'] = 1
+	t.Validator[','] = 1
+	t.Validator['+'] = 1
+	t.Validator['-'] = 1
+	t.Validator['*'] = 1
+	t.Validator['/'] = 1
+	t.Validator[' '] = 1
 }
 
 func (t *TokenDriver) ParseTokens(lexemeList []Lexeme) {
@@ -118,13 +135,24 @@ func (t *TokenDriver) ParseTokens(lexemeList []Lexeme) {
 			lex.LexType == "COMMA" ||
 			lex.LexType == "RIGHT_PARANTHESES" ||
 			lex.LexType == "LEFT_PARANTHESES" ||
-			lex.LexType == "PIPE" ||
 			lex.LexType == "WHITESPACE" ||
 			t.Operators[lex.LexType] != 0 ||
 			lex.LexType == "SEMICOLON" {
 
-			if CheckIsIdentifier(str) {
-				checkAndParseIdentifier(str, t)
+			isKeyword := checkAndParseKeyword(str, t)
+
+			if !isKeyword {
+				if CheckIsIdentifier(str) {
+					checkAndParseIdentifier(str, t)
+				}
+			}
+
+			if t.Operators[lex.LexType] != 0 {
+				index := ParseOperators(str, i, lexemeList, t)
+				str = ""
+				i = index
+				i += 1
+				continue
 			}
 
 			new_token := Token{
@@ -142,10 +170,6 @@ func (t *TokenDriver) ParseTokens(lexemeList []Lexeme) {
 	}
 
 	removeEmptyTokens(t)
-
-	// for _, t := range lexemeList {
-	// 	fmt.Printf("Lexeme Type : %s , Lexeme Value : %s \n", t.LexType, t.Value)
-	// }
 
 	for _, t := range t.TokenList {
 		fmt.Printf("Token Type : %s , Token Value : %s \n", t.Type, t.Value)

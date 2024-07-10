@@ -145,8 +145,17 @@ func (d *LexemeDriver) CheckLexeme(char string) {
 	} else if char == "|" {
 
 		new_lex := Lexeme{
-			LexType: "PIPE",
+			LexType: "PIPE_OPERATOR",
 			Value:   "|",
+		}
+
+		d.LexList = append(d.LexList, new_lex)
+
+	} else if char == "&" {
+
+		new_lex := Lexeme{
+			LexType: "AND_OPERATOR",
+			Value:   "&",
 		}
 
 		d.LexList = append(d.LexList, new_lex)

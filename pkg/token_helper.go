@@ -1,9 +1,6 @@
 package pkg
 
-import (
-	"fmt"
-	"strings"
-)
+import "strings"
 
 func CheckAndParseStringLiteral(lexemeList []Lexeme, index int, t *TokenDriver) (bool, int) {
 
@@ -86,7 +83,13 @@ func checkAndParseNumericLiteral(lexemeList []Lexeme, index int, t *TokenDriver)
 func checkAndParseKeyword(str string, t *TokenDriver) bool {
 	str = strings.ReplaceAll(str, " ", "")
 	str = strings.ReplaceAll(str, "\n", "")
+
+	if len(str) != 0 && t.Validator[str[len(str)-1]] != 0 {
+		str = str[:len(str)-1]
+	}
+
 	isKeyword := CheckPrevLexemesKeyword(str, t.KeyWordList)
+
 	if isKeyword {
 		new_token := Token{
 			Type:  "KEYWORD",
@@ -101,7 +104,6 @@ func checkAndParseKeyword(str string, t *TokenDriver) bool {
 }
 
 func checkAndParseIdentifier(str string, t *TokenDriver) bool {
-	fmt.Println("Possobile identifier : " + str)
 
 	if len(str) == 0 {
 		return false
@@ -111,19 +113,7 @@ func checkAndParseIdentifier(str string, t *TokenDriver) bool {
 		return false
 	}
 
-	valid := make(map[byte]int)
-	valid['}'] = 1
-	valid[')'] = 1
-	valid[']'] = 1
-	valid[';'] = 1
-	valid[','] = 1
-	valid['+'] = 1
-	valid['-'] = 1
-	valid['*'] = 1
-	valid['/'] = 1
-	valid[' '] = 1
-
-	if valid[str[len(str)-1]] == 0 {
+	if t.Validator[str[len(str)-1]] == 0 {
 		return false
 	} else {
 		// remove the last character
@@ -146,4 +136,34 @@ func removeEmptyTokens(t *TokenDriver) {
 		}
 	}
 	t.TokenList = newList
+}
+
+func ParseOperators(str string, index int, lexemeList []Lexeme, t *TokenDriver) int {
+
+	ops := make(map[string]string)
+	ops["=="] = "DOUBLE_EQUALS_OPERATOR"
+	ops["!="] = "NOT_EQUALS_OPERATOR"
+	ops["<="] = "LESS_THAN_OR_EQUALS_OPERATOR"
+	ops[">="] = "GREATER_THAN_OR_EQUALS_OPERATOR"
+	ops["&&"] = "AND_OPERATOR"
+	ops["&"] = "REFERECE_OPERATOR"
+	ops["||"] = "OR_OPERATOR"
+	ops["="] = "EQUAL_OPERATOR"
+	ops["+"] = "PLUS_OPERATOR"
+	ops["-"] = "MINUS_OPERATOR"
+	ops["*"] = "MULTIPLY_OPERATOR"
+	ops["/"] = "DIVIDE_OPERATOR"
+
+	if t.Operators[lexemeList[index+1].LexType] != 0 {
+		str += lexemeList[index+1].Value
+		index += 1
+	}
+
+	new_token := Token{
+		Type:  ops[str],
+		Value: str,
+	}
+	t.TokenList = append(t.TokenList, new_token)
+
+	return index
 }

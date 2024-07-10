@@ -7,14 +7,15 @@ start
     let int out = (val1 + val2) + 100.45;
     let boolean flag = ( true || false );
     let real r = 3.12;
-    let string name = ('My name is naveen' + 'hi') + 'Naveen Dhananjaya Hettiwaththa';
+    let string name = ('My name is naveen'+'hi') +'Naveen Dhananjaya Hettiwaththa';
     
-    if (flag == true) {
+    if(flag == true) {
         print 'flag is true';
-    } else {
+    }else{
         print 'flag is false';
     }
 
+    let int newInt = &val2;
 
     print out;
 

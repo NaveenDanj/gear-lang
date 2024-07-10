@@ -1,6 +1,8 @@
 package pkg
 
-import "regexp"
+import (
+	"regexp"
+)
 
 func CheckPrevLexemesKeyword(str string, keywordList [30]string) bool {
 	for _, keyword := range keywordList {
