@@ -1,6 +1,9 @@
 package pkg
 
-import "strings"
+import (
+	"gear-lang/pkg/lib"
+	"strings"
+)
 
 func CheckAndParseStringLiteral(lexemeList []Lexeme, index int, t *TokenDriver) (bool, int) {
 
@@ -33,7 +36,7 @@ func CheckAndParseStringLiteral(lexemeList []Lexeme, index int, t *TokenDriver) 
 		str += lexemeList[i].Value
 	}
 
-	new_token := Token{
+	new_token := lib.Token{
 		Type:  "STRING_LITERAL",
 		Value: str,
 	}
@@ -67,7 +70,7 @@ func checkAndParseNumericLiteral(lexemeList []Lexeme, index int, t *TokenDriver)
 
 	if IsDigit(str) {
 
-		new_token := Token{
+		new_token := lib.Token{
 			Type:  "NUMERIC_LITERAL",
 			Value: str,
 		}
@@ -91,7 +94,7 @@ func checkAndParseKeyword(str string, t *TokenDriver) bool {
 	isKeyword := CheckPrevLexemesKeyword(str, t.KeyWordList)
 
 	if isKeyword {
-		new_token := Token{
+		new_token := lib.Token{
 			Type:  "KEYWORD",
 			Value: str,
 		}
@@ -120,7 +123,7 @@ func checkAndParseIdentifier(str string, t *TokenDriver) bool {
 		str = str[:len(str)-1]
 	}
 
-	new_token := Token{
+	new_token := lib.Token{
 		Type:  "IDENTIFIER",
 		Value: str,
 	}
@@ -129,7 +132,7 @@ func checkAndParseIdentifier(str string, t *TokenDriver) bool {
 }
 
 func removeEmptyTokens(t *TokenDriver) {
-	var newList []Token
+	var newList []lib.Token
 	for _, token := range t.TokenList {
 		if token.Value != "" {
 			newList = append(newList, token)
@@ -159,7 +162,7 @@ func ParseOperators(str string, index int, lexemeList []Lexeme, t *TokenDriver) 
 		index += 1
 	}
 
-	new_token := Token{
+	new_token := lib.Token{
 		Type:  ops[str],
 		Value: str,
 	}

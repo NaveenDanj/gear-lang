@@ -1,12 +1,9 @@
 package pkg
 
-type Token struct {
-	Type  string
-	Value string
-}
+import "gear-lang/pkg/lib"
 
 type TokenDriver struct {
-	TokenList   []Token
+	TokenList   []lib.Token
 	KeyWordList [30]string
 	Operators   map[string]int
 	Numbers     map[byte]int
@@ -118,7 +115,7 @@ func (t *TokenDriver) Tokenizer(lexemeList []Lexeme) {
 			}
 
 		} else if str == "true" || str == "false" {
-			new_token := Token{
+			new_token := lib.Token{
 				Type:  "BOOLEAN_LITERAL",
 				Value: str,
 			}
@@ -151,7 +148,7 @@ func (t *TokenDriver) Tokenizer(lexemeList []Lexeme) {
 				continue
 			}
 
-			new_token := Token{
+			new_token := lib.Token{
 				Type:  lex.LexType,
 				Value: lex.Value,
 			}

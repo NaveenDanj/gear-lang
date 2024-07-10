@@ -47,3 +47,7 @@ type Expression struct {
 	Right    *Expression
 	Operator string
 }
+
+type ImportStatement struct {
+	ImportPath string
+}
