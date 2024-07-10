@@ -9,10 +9,10 @@ start
     let real r = 3.12;
     let string name = ('My name is naveen' + 'hi') + 'Naveen Dhananjaya Hettiwaththa';
     
-    if flag == true {
-        print "flag is true";
-    }else {
-        print "flag is false";
+    if (flag == true) {
+        print 'flag is true';
+    } else {
+        print 'flag is false';
     }
 
 
