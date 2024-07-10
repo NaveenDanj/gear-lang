@@ -5,6 +5,6 @@ type Program struct {
 }
 
 type Statement struct {
-	NodeType string
-	Value    interface{}
+	StatementType string
+	Value         interface{}
 }

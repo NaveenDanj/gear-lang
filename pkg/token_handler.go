@@ -1,9 +1,5 @@
 package pkg
 
-import (
-	"fmt"
-)
-
 type Token struct {
 	Type  string
 	Value string
@@ -170,8 +166,8 @@ func (t *TokenDriver) Tokenizer(lexemeList []Lexeme) {
 
 	removeEmptyTokens(t)
 
-	for _, t := range t.TokenList {
-		fmt.Printf("Token Type : %s , Token Value : %s \n", t.Type, t.Value)
-	}
+	// for _, t := range t.TokenList {
+	// 	fmt.Printf("Token Type : %s , Token Value : %s \n", t.Type, t.Value)
+	// }
 
 }

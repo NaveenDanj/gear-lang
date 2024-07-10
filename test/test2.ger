@@ -1,11 +1,11 @@
 start
     
     export function greet ( string name ) {
-        print 'hello ' + name ;
+        print 'hello ' + name;
     }
 
     export function sum ( int val1, int val2 ) {
-        print 'hello ' + name ;
+        print 'hello ' + name;
     }
 
-end
+end 
