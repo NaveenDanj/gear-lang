@@ -1,6 +1,9 @@
 package nodes
 
-import "gear-lang/pkg/lib"
+import (
+	"gear-lang/pkg/lib"
+	"gear-lang/pkg/util"
+)
 
 func HandlePrintStatement(tokenList []lib.Token, index int) (int, lib.Statement) {
 	expressionStr := ""
@@ -11,9 +14,17 @@ func HandlePrintStatement(tokenList []lib.Token, index int) (int, lib.Statement)
 		counter += 1
 	}
 
-	newPrintStatement := lib.PrintStatement{
-		Expression: expressionStr,
+	expr, err := util.ParseExpressionTokens(tokenList[index+1 : counter])
+
+	if err != nil {
+		panic("Error : Expression parsing error: " + err.Error())
 	}
+
+	newPrintStatement := lib.PrintStatement{
+		Expression: expr,
+	}
+
+	// expr.PrintExpression("", true)
 
 	newStatement := lib.Statement{
 		StatementType: "PRINT",

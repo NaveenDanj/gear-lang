@@ -1,6 +1,8 @@
 package pkg
 
-import "gear-lang/pkg/lib"
+import (
+	"gear-lang/pkg/lib"
+)
 
 type TokenDriver struct {
 	TokenList   []lib.Token

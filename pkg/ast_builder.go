@@ -50,6 +50,7 @@ func (ast *ASTBuilder) handleKeyword(keyword string) {
 		index, newStatement := nodes.HandleImportStatement(ast.TokenList, ast.CurrentStatementIndex)
 		ast.Program.Statements = append(ast.Program.Statements, newStatement)
 		ast.CurrentStatementIndex = index
+
 	default:
 		fmt.Printf("Unhandled keyword: %s\n", keyword)
 		// panic("Error: Unhandled keyword")

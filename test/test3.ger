@@ -1,0 +1,3 @@
+start
+    let string val =  'Hello' + 'World';
+end 

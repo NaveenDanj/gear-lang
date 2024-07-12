@@ -43,6 +43,33 @@ func (d *LexemeDriver) CheckLexeme(char string) {
 
 		d.LexList = append(d.LexList, new_lex)
 
+	} else if char == "-" {
+
+		new_lex := Lexeme{
+			LexType: "MINUS_OPERATOR",
+			Value:   "-",
+		}
+
+		d.LexList = append(d.LexList, new_lex)
+
+	} else if char == "*" {
+
+		new_lex := Lexeme{
+			LexType: "MULTIPLY_OPERATOR",
+			Value:   "*",
+		}
+
+		d.LexList = append(d.LexList, new_lex)
+
+	} else if char == "/" {
+
+		new_lex := Lexeme{
+			LexType: "DIVIDE_OPERATOR",
+			Value:   "/",
+		}
+
+		d.LexList = append(d.LexList, new_lex)
+
 	} else if char == "=" {
 
 		new_lex := Lexeme{
@@ -155,7 +182,7 @@ func (d *LexemeDriver) CheckLexeme(char string) {
 
 		new_lex := Lexeme{
 			LexType: "AND_OPERATOR",
-			Value:   "|",
+			Value:   "&",
 		}
 
 		d.LexList = append(d.LexList, new_lex)

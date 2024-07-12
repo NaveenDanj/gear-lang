@@ -1,6 +1,10 @@
 package nodes
 
-import "gear-lang/pkg/lib"
+import (
+	"fmt"
+	"gear-lang/pkg/lib"
+	"gear-lang/pkg/util"
+)
 
 func HandleVariableDeclarationStatement(tokenList []lib.Token, index int) (int, lib.Statement) {
 
@@ -15,11 +19,19 @@ func HandleVariableDeclarationStatement(tokenList []lib.Token, index int) (int, 
 	}
 
 	// TODO: have to handle expression strings
+	fmt.Println("expression is : " + tokenList[index+4].Value + " " + tokenList[counter].Value)
+	expr, err := util.ParseExpressionTokens(tokenList[index+4 : counter])
+
+	// expr.PrintExpression("", true)
+
+	if err != nil {
+		panic("Error : Expression parsing error: " + err.Error())
+	}
 
 	newLetStatement := lib.LetStatement{
 		VariableName: varName,
 		DataType:     dataType,
-		Expression:   nil,
+		Expression:   expr,
 	}
 
 	newStatement := lib.Statement{

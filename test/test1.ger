@@ -5,7 +5,6 @@ start
     let int val1 = (10+11) + 23 + myVar;
     let int val2 = 20;
     let int out = (val1 + val2) + 100.45;
-    let boolean flag = ( true || false );
     let real r = 3.12;
     let string name = ('My name is naveen'+'hi') + 'Naveen Dhananjaya Hettiwaththa';
     
@@ -15,8 +14,8 @@ start
         print 'flag is false';
     }
 
-    let int newInt = &val2;
+    let int newInt = val2;
 
     print out;
 
-end
+end 
