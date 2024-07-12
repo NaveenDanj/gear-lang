@@ -41,13 +41,19 @@ type LetStatement struct {
 	Expression   interface{}
 }
 
-type Expression struct {
-	Value    interface{}
-	Left     *Expression
-	Right    *Expression
-	Operator string
-}
-
 type ImportStatement struct {
 	ImportPath string
+}
+
+type IfStatement struct {
+	Condition *Expression
+	ThenBlock []Statement
+	ElseBlock []Statement
+}
+
+type Expression struct {
+	Left     *Expression
+	Operator string
+	Right    *Expression
+	Value    string
 }

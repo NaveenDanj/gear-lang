@@ -24,8 +24,6 @@ func HandlePrintStatement(tokenList []lib.Token, index int) (int, lib.Statement)
 		Expression: expr,
 	}
 
-	// expr.PrintExpression("", true)
-
 	newStatement := lib.Statement{
 		StatementType: "PRINT",
 		Value:         newPrintStatement,

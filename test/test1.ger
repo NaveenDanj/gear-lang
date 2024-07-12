@@ -8,7 +8,7 @@ start
     let real r = 3.12;
     let string name = ('My name is naveen'+'hi') + 'Naveen Dhananjaya Hettiwaththa';
     
-    if(flag == true) {
+    if( (flag == true) || (flag == false) ) {
         print 'flag is true' + ' ' + name;
     }else{
         print 'flag is false';

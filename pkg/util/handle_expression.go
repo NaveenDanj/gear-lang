@@ -5,19 +5,12 @@ import (
 	"gear-lang/pkg/lib"
 )
 
-type Expression struct {
-	Left     *Expression
-	Operator string
-	Right    *Expression
-	Value    string
-}
-
-func ParseExpression(index int, tokens []lib.Token, rlist []lib.Token) (*Expression, int, error) {
+func ParseExpression(index int, tokens []lib.Token, rlist []lib.Token) (*lib.Expression, int, error) {
 	if index >= len(tokens) {
 		return nil, index, fmt.Errorf("unexpected end of tokens")
 	}
 
-	var left *Expression
+	var left *lib.Expression
 	var err error
 
 	// Parse the primary expression (number, identifier, or parenthesized expression)
@@ -39,7 +32,7 @@ func ParseExpression(index int, tokens []lib.Token, rlist []lib.Token) (*Express
 			return nil, index, err
 		}
 
-		left = &Expression{
+		left = &lib.Expression{
 			Left:     left,
 			Operator: token.Value,
 			Right:    right,
@@ -51,7 +44,7 @@ func ParseExpression(index int, tokens []lib.Token, rlist []lib.Token) (*Express
 }
 
 // Helper function to parse a primary expression (number, identifier, or parenthesized expression)
-func parsePrimaryExpression(tokens []lib.Token, index int) (*Expression, int, error) {
+func parsePrimaryExpression(tokens []lib.Token, index int) (*lib.Expression, int, error) {
 	if index >= len(tokens) {
 		return nil, index, fmt.Errorf("unexpected end of tokens")
 	}
@@ -63,7 +56,7 @@ func parsePrimaryExpression(tokens []lib.Token, index int) (*Expression, int, er
 
 		value := token.Value
 		index++
-		return &Expression{Value: value}, index, nil
+		return &lib.Expression{Value: value}, index, nil
 
 	case "LEFT_PARANTHESES":
 
@@ -84,37 +77,7 @@ func parsePrimaryExpression(tokens []lib.Token, index int) (*Expression, int, er
 }
 
 // Helper function to start parsing from the beginning
-func ParseExpressionTokens(tokens []lib.Token) (*Expression, error) {
+func ParseExpressionTokens(tokens []lib.Token) (*lib.Expression, error) {
 	result, _, err := ParseExpression(0, tokens, nil)
 	return result, err
-}
-
-func (e *Expression) PrintExpression(indent string, last bool) {
-	if e == nil {
-		return
-	}
-
-	// Print the current node
-	fmt.Print(indent)
-	if last {
-		fmt.Print("└─")
-		indent += "  "
-	} else {
-		fmt.Print("├─")
-		indent += "| "
-	}
-
-	if e.Operator != "" {
-		fmt.Println(e.Operator)
-	} else {
-		fmt.Println(e.Value)
-	}
-
-	// Print the left and right children
-	if e.Left != nil {
-		e.Left.PrintExpression(indent, false)
-	}
-	if e.Right != nil {
-		e.Right.PrintExpression(indent, true)
-	}
 }
