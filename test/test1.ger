@@ -10,8 +10,15 @@ start
     
     if( (flag == true) || (flag == false) ) {
         print 'flag is true' + ' ' + name;
+        print 'another print statement';
+
+        if ( name == 'Naveen' ){
+            print 'another print statement';
+        }
+
     }else{
         print 'flag is false';
+        print 'another print statement';
     }
 
     let int newInt = val2;

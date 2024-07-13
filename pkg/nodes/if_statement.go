@@ -6,7 +6,7 @@ import (
 	"gear-lang/pkg/util"
 )
 
-func HandleIfStatementCondition(tokenList []lib.Token, index int) (int, lib.Statement) {
+func HandleIfStatementCondition(tokenList []lib.Token, index int) (int, lib.IfStatement) {
 
 	counter := index + 1
 
@@ -24,9 +24,10 @@ func HandleIfStatementCondition(tokenList []lib.Token, index int) (int, lib.Stat
 		panic("Error: Error parsing boolean expression " + err.Error())
 	}
 
-	return counter, lib.Statement{
-		StatementType: "IF",
-		Value:         lib.IfStatement{},
+	ifstmt := lib.IfStatement{
+		Condition: expr,
 	}
+
+	return counter, ifstmt
 
 }

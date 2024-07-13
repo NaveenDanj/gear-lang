@@ -47,8 +47,8 @@ type ImportStatement struct {
 
 type IfStatement struct {
 	Condition *Expression
-	ThenBlock []Statement
-	ElseBlock []Statement
+	ThenBlock Statement
+	ElseBlock Statement
 }
 
 type Expression struct {
