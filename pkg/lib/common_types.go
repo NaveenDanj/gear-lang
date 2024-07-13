@@ -57,3 +57,8 @@ type Expression struct {
 	Right    *Expression
 	Value    string
 }
+
+type StatementBlock struct {
+	Type       string
+	Statements []Statement
+}
