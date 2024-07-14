@@ -58,9 +58,18 @@ func (ast *ASTBuilder) handleKeyword(keyword string, i int) (int, lib.Statement)
 		index, ifStatement := nodes.HandleIfStatementCondition(ast.TokenList, i)
 		var l []lib.Statement
 		newIndex, block := ast.ParseBlockStatement(ast.TokenList, l, index)
-		block.StatementType = "BlockStatement"
+		block.StatementType = "BLOCK_STATEMENT"
 		ifStatement.ThenBlock = block
-		newSt := lib.Statement{StatementType: "IFStatement", Value: ifStatement}
+
+		if ast.TokenList[newIndex+1].Type == "KEYWORD" && ast.TokenList[newIndex+1].Value == "else" {
+			var l []lib.Statement
+			newElseIndex, else_block := ast.ParseBlockStatement(ast.TokenList, l, newIndex+2)
+			else_block.StatementType = "BLOCK_STATEMENT"
+			ifStatement.ElseBlock = else_block
+			newIndex = newElseIndex
+		}
+
+		newSt := lib.Statement{StatementType: "IF_STATEMENT", Value: ifStatement}
 		return newIndex, newSt
 	default:
 		fmt.Printf("Unhandled keyword: %s\n", keyword)
@@ -80,6 +89,7 @@ func (ast *ASTBuilder) ParseBlockStatement(tokenList []lib.Token, stmtList []lib
 	} else if tokenList[index].Type == "RIGHT_BRACE" {
 
 		newBlock := lib.StatementBlock{
+			Type:       "StatementBlock",
 			Statements: stmtList,
 		}
 
