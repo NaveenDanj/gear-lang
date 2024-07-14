@@ -28,6 +28,9 @@ func (t *TokenDriver) Init() {
 		"if",
 		"else",
 		"while",
+		"export",
+		"void",
+		"return",
 	}
 
 	t.Operators = make(map[string]int)

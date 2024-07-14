@@ -25,4 +25,10 @@ start
 
     let int newInt = val2;
 
+    function void sum ( int val1, int val2) {
+        let int out = val1 + val2; 
+        print 'The sum is' + out;
+        return out;
+    }
+
 end 

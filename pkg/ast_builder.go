@@ -81,6 +81,18 @@ func (ast *ASTBuilder) handleKeyword(keyword string, i int) (int, lib.Statement)
 
 		newSt := lib.Statement{StatementType: "WHILE_STATEMENT", Value: whileStmt}
 		return newIndex, newSt
+
+	case "function":
+		index, funcStmt := nodes.HandleFunctionDeclarationStatement(ast.TokenList, i)
+		var l []lib.Statement
+		newIndex, block := ast.ParseBlockStatement(ast.TokenList, l, index)
+		funcStmt.Body = block
+		newSt := lib.Statement{StatementType: "FUNCTION_DECLARATION", Value: funcStmt}
+		return newIndex, newSt
+
+	case "return":
+		index, newStatement := nodes.HandleReturnStatement(ast.TokenList, i)
+		return index, newStatement
 	default:
 		fmt.Printf("Unhandled keyword: %s\n", keyword)
 		index := i + 1

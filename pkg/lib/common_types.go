@@ -67,3 +67,20 @@ type WhileStatement struct {
 	Condition *Expression
 	Body      Statement
 }
+
+type FunctionDeclarationStatement struct {
+	FunctionName string
+	Parameters   []FormalParameter
+	Body         Statement
+	ReturnType   string
+	IsExported   bool
+}
+
+type FormalParameter struct {
+	Name     string
+	DataType string
+}
+
+type ReturnStatement struct {
+	Expression *Expression
+}
