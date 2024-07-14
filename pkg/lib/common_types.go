@@ -62,3 +62,8 @@ type StatementBlock struct {
 	Type       string
 	Statements []Statement
 }
+
+type WhileStatement struct {
+	Condition *Expression
+	Body      Statement
+}

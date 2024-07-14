@@ -27,6 +27,7 @@ func (t *TokenDriver) Init() {
 		"import",
 		"if",
 		"else",
+		"while",
 	}
 
 	t.Operators = make(map[string]int)

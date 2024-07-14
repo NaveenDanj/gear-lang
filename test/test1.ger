@@ -17,6 +17,12 @@ start
         let int out = (val1 + val2)  + 200.9000;
     }
 
-    let int newInt = val2;
     print out;
+
+    while (flag == true) {
+        print 'flag is true';
+    }
+
+    let int newInt = val2;
+
 end 

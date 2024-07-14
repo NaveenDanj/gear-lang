@@ -20,6 +20,7 @@ func (ast *ASTBuilder) Parse(index int) {
 
 		for _, item := range ast.Program.Statements {
 			fmt.Printf("%#v\n", item)
+			fmt.Println("----------------------------------------")
 		}
 
 		return
@@ -70,6 +71,15 @@ func (ast *ASTBuilder) handleKeyword(keyword string, i int) (int, lib.Statement)
 		}
 
 		newSt := lib.Statement{StatementType: "IF_STATEMENT", Value: ifStatement}
+		return newIndex, newSt
+	case "while":
+		index, whileStmt := nodes.HandleWhileStatementCondition(ast.TokenList, i)
+		var l []lib.Statement
+		newIndex, block := ast.ParseBlockStatement(ast.TokenList, l, index)
+		block.StatementType = "BLOCK_STATEMENT"
+		whileStmt.Body = block
+
+		newSt := lib.Statement{StatementType: "WHILE_STATEMENT", Value: whileStmt}
 		return newIndex, newSt
 	default:
 		fmt.Printf("Unhandled keyword: %s\n", keyword)
