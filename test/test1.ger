@@ -11,7 +11,6 @@ start
     if( (flag == true) || (flag == false) ) {
         print 'flag is true' + ' ' + name;
         print 'another print statement';
-
     }else{
         print 'another print statement';
         let int out = (val1 + val2)  + 200.9000;
@@ -25,10 +24,24 @@ start
 
     let int newInt = val2;
 
-    function void sum ( int val1, int val2) {
+    function int sum ( int val1, int val2) {
         let int out = val1 + val2; 
         print 'The sum is' + out;
         return out;
+    }
+
+    function real sum ( real val1, real val2) {
+        let int out = val1 + val2; 
+        print 'The sum is' + out;
+        return out;
+    }
+
+    struct Person {
+        name:string;
+        age:int;
+        greet: function void (string name){
+            print 'Hello World ' + name;
+        }
     }
 
 end 

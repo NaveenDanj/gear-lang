@@ -84,3 +84,15 @@ type FormalParameter struct {
 type ReturnStatement struct {
 	Expression *Expression
 }
+
+type StructDeclarationStatement struct {
+	Name       string
+	Fields     []StructField
+	IsExported bool
+}
+
+type StructField struct {
+	Name     string
+	DataType string
+	Body     Statement
+}
