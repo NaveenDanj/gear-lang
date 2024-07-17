@@ -78,6 +78,19 @@ Gear Lang is a new programming language built using Go. It is designed to be sim
     end
     ```
 
+## TODOs
+
+- [ ] Complete the standard library implementation
+- [ ] Improve error handling and reporting
+- [ ] Enhance the language documentation
+- [ ] Add more examples and tutorials
+- [ ] Implement package management system
+- [ ] Optimize the compiler for better performance
+- [ ] Develop an integrated development environment (IDE) or plugin support for popular IDEs
+- [ ] Increase test coverage and add more unit tests
+
+
+
 ## Getting Started
 
 To get started with Gear Lang, follow these steps:

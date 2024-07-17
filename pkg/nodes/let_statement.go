@@ -40,3 +40,34 @@ func HandleVariableDeclarationStatement(tokenList []lib.Token, index int) (int, 
 	return counter, newStatement
 
 }
+
+func HandleVariableAssignmentStatement(tokenList []lib.Token, index int) (int, lib.Statement) {
+	varName := tokenList[index-1].Value
+	expressionStr := ""
+	counter := index + 1
+
+	for i := index + 1; i < len(tokenList) && tokenList[i].Type != "SEMICOLON"; i++ {
+		expressionStr += tokenList[i].Value
+		counter += 1
+	}
+
+	// TODO: have to handle expression strings
+	expr, err := util.ParseExpressionTokens(tokenList[index+1 : counter])
+
+	if err != nil {
+		panic("Error: Error in parsing variable assingment expression")
+	}
+
+	st := lib.VaribleAssignmentStatement{
+		VariableName: varName,
+		Expression:   expr,
+	}
+
+	newStatement := lib.Statement{
+		StatementType: "VARIABLE_ASSIGNMENT",
+		Value:         st,
+	}
+
+	return counter, newStatement
+
+}

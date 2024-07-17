@@ -35,6 +35,10 @@ func (ast *ASTBuilder) Parse(index int) {
 
 		ast.Program.Statements = append(ast.Program.Statements, newStatement)
 		ast.CurrentStatementIndex = index
+	} else if ast.TokenList[ast.CurrentStatementIndex].Type == "EQUAL_OPERATOR" {
+		index, stmt := nodes.HandleVariableAssignmentStatement(ast.TokenList, ast.CurrentStatementIndex)
+		ast.Program.Statements = append(ast.Program.Statements, stmt)
+		ast.CurrentStatementIndex = index
 	} else {
 		ast.CurrentStatementIndex += 1
 	}

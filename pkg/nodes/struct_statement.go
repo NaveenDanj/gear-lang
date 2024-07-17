@@ -8,3 +8,7 @@ func HandleStructDeclarationStatement(tokenList []lib.Token, index int) (int, li
 	structName := tokenList[index+1].Value
 	return index, lib.StructDeclarationStatement{Name: structName}
 }
+
+// func HandleStructObjectCreationStatement(tokenList []lib.Token, index int) (int, lib.StructDeclarationStatement) {
+
+// }

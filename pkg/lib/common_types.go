@@ -58,6 +58,10 @@ type Expression struct {
 	Value    string
 }
 
+type ExpressionFactor struct {
+	Type 
+}
+
 type StatementBlock struct {
 	Type       string
 	Statements []Statement
@@ -95,4 +99,14 @@ type StructField struct {
 	Name     string
 	DataType string
 	Body     Statement
+}
+
+type VaribleAssignmentStatement struct {
+	VariableName string
+	Expression   *Expression
+}
+
+type ObjectPropertyAccessExpression struct {
+	ObjectName   string
+	PropertyName string
 }
