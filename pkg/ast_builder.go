@@ -30,7 +30,7 @@ func (ast *ASTBuilder) Parse(index int) {
 		index, newStatement := ast.handleKeyword(ast.TokenList[ast.CurrentStatementIndex].Value, ast.CurrentStatementIndex)
 
 		if newStatement.StatementType == "Unhandled" {
-			fmt.Println("unhandled keyword")
+			// fmt.Println("unhandled keyword")
 		}
 
 		ast.Program.Statements = append(ast.Program.Statements, newStatement)
@@ -100,7 +100,7 @@ func (ast *ASTBuilder) handleKeyword(keyword string, i int) (int, lib.Statement)
 		newSt := lib.Statement{StatementType: "STRUCT_DECLARATION", Value: std}
 		return newIndex, newSt
 	default:
-		fmt.Printf("Unhandled keyword: %s\n", keyword)
+		// fmt.Printf("Unhandled keyword: %s\n", keyword)
 		index := i + 1
 		return index, lib.Statement{StatementType: "Unhandled"}
 	}

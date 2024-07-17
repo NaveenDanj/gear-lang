@@ -43,10 +43,10 @@ start
             print 'Hello World ' + name;
             print 'This is message from greet1 function';
         }
-
         greet2 : function void (string name){
             print 'Hello World ' + name;
         }
+        year:int;
     }
 
     let Person newPerson = 123;
