@@ -87,7 +87,7 @@ type ReturnStatement struct {
 
 type StructDeclarationStatement struct {
 	Name       string
-	Fields     []StructField
+	Fields     Statement
 	IsExported bool
 }
 

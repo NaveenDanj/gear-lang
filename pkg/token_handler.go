@@ -31,6 +31,7 @@ func (t *TokenDriver) Init() {
 		"export",
 		"void",
 		"return",
+		"struct",
 	}
 
 	t.Operators = make(map[string]int)
@@ -66,6 +67,7 @@ func (t *TokenDriver) Init() {
 	t.Validator['('] = 1
 	t.Validator[']'] = 1
 	t.Validator[';'] = 1
+	t.Validator[':'] = 1
 	t.Validator[','] = 1
 	t.Validator['+'] = 1
 	t.Validator['-'] = 1
@@ -135,6 +137,7 @@ func (t *TokenDriver) Tokenizer(lexemeList []Lexeme) {
 			lex.LexType == "RIGHT_PARANTHESES" ||
 			lex.LexType == "LEFT_PARANTHESES" ||
 			lex.LexType == "WHITESPACE" ||
+			lex.LexType == "COLON" ||
 			t.Operators[lex.LexType] != 0 ||
 			lex.LexType == "SEMICOLON" {
 

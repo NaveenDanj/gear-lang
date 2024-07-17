@@ -5,13 +5,21 @@ import (
 	"gear-lang/pkg/util"
 )
 
-func HandleFunctionDeclarationStatement(tokenList []lib.Token, index int) (int, lib.FunctionDeclarationStatement) {
+func HandleFunctionDeclarationStatement(tokenList []lib.Token, index int, isDefault bool) (int, lib.FunctionDeclarationStatement) {
 	returnType := tokenList[index+1].Value
 	functionName := tokenList[index+2].Value
-	paramList := make([]lib.FormalParameter, 0)
-	i := index + 4
+	stepper := 4
 
-	for i = index + 4; i < len(tokenList) && tokenList[i].Type != "LEFT_BRACE"; i++ {
+	if !isDefault {
+		returnType = tokenList[index+3].Value
+		functionName = tokenList[index].Value
+		stepper = 3
+	}
+
+	paramList := make([]lib.FormalParameter, 0)
+	i := index + stepper
+
+	for i = index + stepper; i < len(tokenList) && tokenList[i].Type != "LEFT_BRACE"; i++ {
 
 		if tokenList[i].Type == "COMMA" || (tokenList[i].Type == "RIGHT_PARANTHESES" && tokenList[i-1].Type == "IDENTIFIER") {
 			paramName := tokenList[i-1].Value

@@ -124,6 +124,15 @@ func (d *LexemeDriver) CheckLexeme(char string) {
 
 		d.LexList = append(d.LexList, new_lex)
 
+	} else if char == ":" {
+
+		new_lex := Lexeme{
+			LexType: "COLON",
+			Value:   ":",
+		}
+
+		d.LexList = append(d.LexList, new_lex)
+
 	} else if char == "}" {
 
 		new_lex := Lexeme{

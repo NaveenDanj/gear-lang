@@ -81,6 +81,7 @@ func CheckIsIdentifier(str string) bool {
 	valid['*'] = 1
 	valid['/'] = 1
 	valid[' '] = 1
+	valid[':'] = 1
 
 	if len(str) == 0 {
 		return false
