@@ -78,16 +78,32 @@ Gear Lang is a new programming language built using Go. It is designed to be sim
     end
     ```
 
-## TODOs
+## Roadmap
 
-- [ ] Complete the standard library implementation
-- [ ] Improve error handling and reporting
-- [ ] Enhance the language documentation
-- [ ] Add more examples and tutorials
-- [ ] Implement package management system
-- [ ] Optimize the compiler for better performance
-- [ ] Develop an integrated development environment (IDE) or plugin support for popular IDEs
-- [ ] Increase test coverage and add more unit tests
+### Completed
+
+- Lexer implementation
+- Tokenizer implementation
+- Part of the AST implementation
+
+### In Progress
+
+- AST building phase
+
+### Upcoming
+
+- Implement access to struct properties and related features
+- Complete the standard library implementation
+- Improve error handling and reporting
+- Enhance the language documentation
+- Add more examples and tutorials
+- Implement package management system
+- Optimize the compiler for better performance
+- Develop an integrated development environment (IDE) or plugin support for popular IDEs
+- Increase test coverage and add more unit tests
+- Gather user feedback and iterate on language design
+- Add support for additional platforms and operating systems
+
 
 
 
