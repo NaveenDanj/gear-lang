@@ -19,7 +19,13 @@ func (ast *ASTBuilder) Parse(index int) {
 	if len(ast.TokenList) == 0 || ast.CurrentStatementIndex == len(ast.TokenList)-1 {
 
 		for _, item := range ast.Program.Statements {
-			fmt.Printf("%#v\n", item)
+			val, ok := item.Value.(lib.LetStatement)
+			
+			if !ok {
+				fmt.Println("Error: item.Value is not of type lib.LetStatement")
+			}
+
+			fmt.Printf("%#v\n", val.Expression)
 			fmt.Println("----------------------------------------")
 		}
 

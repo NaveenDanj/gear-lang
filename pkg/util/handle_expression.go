@@ -52,12 +52,16 @@ func parsePrimaryExpression(tokens []lib.Token, index int) (*lib.Expression, int
 	token := tokens[index]
 
 	switch token.Type {
+	case "COLON":
+		expr := ParseObjectPropertyExpressions(tokens, index)
+		fmt.Println("=========================================")
+		fmt.Println("Object property access : " + expr.ObjectName + " " + expr.PropertyName)
+		index += 2
+		return &lib.Expression{Value: expr}, index, nil
 	case "NUMERIC_LITERAL", "IDENTIFIER", "STRING_LITERAL":
-
 		value := token.Value
 		index++
 		return &lib.Expression{Value: value}, index, nil
-	case "DOT":
 
 	case "LEFT_PARANTHESES":
 
@@ -83,9 +87,10 @@ func ParseExpressionTokens(tokens []lib.Token) (*lib.Expression, error) {
 	return result, err
 }
 
-func ParseObjectPropertyExpressions(tokens []lib.Token, index int) (*lib.Expression, error) {
+func ParseObjectPropertyExpressions(tokens []lib.Token, index int) *lib.ObjectPropertyAccessExpression {
 	newObject := lib.ObjectPropertyAccessExpression{
 		ObjectName:   tokens[index-1].Value,
 		PropertyName: tokens[index+1].Value,
 	}
+	return &newObject
 }

@@ -50,10 +50,10 @@ start
     }
 
     let Person john = new Person;
-    john.name = 'John Doe';
-    john.age = 21;
-    john.greet1(john.name);
-    john.sayAge(john.age);
+    name = john:name + 'Hettiwaththa';
+    john:age = 21;
+    john:greet1(john:name);
+    john:sayAge(john:age);
 
 
 end 

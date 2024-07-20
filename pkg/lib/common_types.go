@@ -55,11 +55,7 @@ type Expression struct {
 	Left     *Expression
 	Operator string
 	Right    *Expression
-	Value    string
-}
-
-type ExpressionFactor struct {
-	Type 
+	Value    interface{}
 }
 
 type StatementBlock struct {
