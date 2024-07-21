@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"gear-lang/pkg/lib"
+	"strings"
 )
 
 func ParseExpression(index int, tokens []lib.Token, rlist []lib.Token) (*lib.Expression, int, error) {
@@ -52,13 +53,14 @@ func parsePrimaryExpression(tokens []lib.Token, index int) (*lib.Expression, int
 	token := tokens[index]
 
 	switch token.Type {
-	case "COLON":
-		expr := ParseObjectPropertyExpressions(tokens, index)
-		fmt.Println("=========================================")
-		fmt.Println("Object property access : " + expr.ObjectName + " " + expr.PropertyName)
-		index += 2
-		return &lib.Expression{Value: expr}, index, nil
 	case "NUMERIC_LITERAL", "IDENTIFIER", "STRING_LITERAL":
+
+		// if token.Type == "IDENTIFIER" {
+		// 	if IsPropertyExpressions() {
+
+		// 	}
+		// }
+
 		value := token.Value
 		index++
 		return &lib.Expression{Value: value}, index, nil
@@ -87,10 +89,50 @@ func ParseExpressionTokens(tokens []lib.Token) (*lib.Expression, error) {
 	return result, err
 }
 
-func ParseObjectPropertyExpressions(tokens []lib.Token, index int) *lib.ObjectPropertyAccessExpression {
+func ParseObjectPropertyExpressions(str string) *lib.ObjectPropertyAccessExpression {
+
+	// split the string by : operator
+	parts := strings.Split(str, ":")
+
+	if len(parts) != 2 {
+		return nil
+	}
+
 	newObject := lib.ObjectPropertyAccessExpression{
-		ObjectName:   tokens[index-1].Value,
-		PropertyName: tokens[index+1].Value,
+		ObjectName:   parts[0],
+		PropertyName: parts[0],
 	}
 	return &newObject
+}
+
+func IsPropertyExpressions(str string) bool {
+	for i := 0; i < len(str); i++ {
+		if str[i] == ':' {
+			return true
+		}
+	}
+	return false
+}
+
+func HandleParsePropertyExpressions(index int, str string, prevObject string, prevProperty string, prevType string) *lib.ObjectPropertyAccessExpression {
+
+	if index == len(str) {
+		return &lib.ObjectPropertyAccessExpression{
+			ObjectName:   prevObject,
+			PropertyName: prevProperty,
+		}
+	}
+
+	if str[index] == ':' && prevType == "Object" {
+		index++ // skip the :
+		return HandleParsePropertyExpressions(index, str[index:], prevObject, str[:index-1], "Property")
+	}
+
+	if str[index] == ':' && prevType == "Property" {
+		index++ // skip the :
+		return HandleParsePropertyExpressions(index, str[index:], prevObject, prevType, "Object")
+	}
+
+	return HandleParsePropertyExpressions(index, str[index:], prevObject, prevType, "Object")
+
 }

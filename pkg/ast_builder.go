@@ -20,7 +20,7 @@ func (ast *ASTBuilder) Parse(index int) {
 
 		for _, item := range ast.Program.Statements {
 			val, ok := item.Value.(lib.LetStatement)
-			
+
 			if !ok {
 				fmt.Println("Error: item.Value is not of type lib.LetStatement")
 			}

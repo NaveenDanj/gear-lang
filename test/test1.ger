@@ -52,7 +52,7 @@ start
     let Person john = new Person;
     name = john:name + 'Hettiwaththa';
     john:age = 21;
-    john:greet1(john:name);
+    john:greet1(john:name );
     john:sayAge(john:age);
 
 
