@@ -52,6 +52,7 @@ func HandleVariableAssignmentStatement(tokenList []lib.Token, index int) (int, l
 	}
 
 	// TODO: have to handle expression strings
+	// prop_exper := util.HandleParsePropertyExpressions(varName , index-1)
 	expr, err := util.ParseExpressionTokens(tokenList[index+1 : counter])
 
 	if err != nil {

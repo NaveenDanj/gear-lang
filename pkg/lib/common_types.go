@@ -98,7 +98,7 @@ type StructField struct {
 }
 
 type VaribleAssignmentStatement struct {
-	VariableName string
+	VariableName interface{}
 	Expression   *Expression
 }
 

@@ -19,13 +19,9 @@ func (ast *ASTBuilder) Parse(index int) {
 	if len(ast.TokenList) == 0 || ast.CurrentStatementIndex == len(ast.TokenList)-1 {
 
 		for _, item := range ast.Program.Statements {
-			val, ok := item.Value.(lib.LetStatement)
+			// val, ok := item.Value.(lib.LetStatement)
 
-			if !ok {
-				fmt.Println("Error: item.Value is not of type lib.LetStatement")
-			}
-
-			fmt.Printf("%#v\n", val.Expression)
+			fmt.Printf("%#v\n", item)
 			fmt.Println("----------------------------------------")
 		}
 
@@ -42,6 +38,7 @@ func (ast *ASTBuilder) Parse(index int) {
 		ast.Program.Statements = append(ast.Program.Statements, newStatement)
 		ast.CurrentStatementIndex = index
 	} else if ast.TokenList[ast.CurrentStatementIndex].Type == "EQUAL_OPERATOR" {
+		fmt.Println("Found variable assignment operation")
 		index, stmt := nodes.HandleVariableAssignmentStatement(ast.TokenList, ast.CurrentStatementIndex)
 		ast.Program.Statements = append(ast.Program.Statements, stmt)
 		ast.CurrentStatementIndex = index
@@ -176,7 +173,7 @@ func (ast *ASTBuilder) ParseStructBlockStatement(tokenList []lib.Token, stmtList
 
 	} else {
 		identifier := tokenList[index].Value
-		typeChecker := tokenList[index+2].Value
+		typeChecker := tokenList[index+1].Value
 		structField := lib.StructField{}
 
 		if typeChecker == "function" {
@@ -197,11 +194,11 @@ func (ast *ASTBuilder) ParseStructBlockStatement(tokenList []lib.Token, stmtList
 			return i, stmt
 		} else {
 			structField.Name = identifier
-			structField.DataType = tokenList[index+2].Value
+			structField.DataType = tokenList[index+1].Value
 			structField.Body = lib.Statement{StatementType: "STRUCT_FIELD", Value: nil}
 			newSt := lib.Statement{StatementType: "STRUCT_FIELD", Value: structField}
 			stmtList = append(stmtList, newSt)
-			i, stmt := ast.ParseStructBlockStatement(tokenList, stmtList, index+4)
+			i, stmt := ast.ParseStructBlockStatement(tokenList, stmtList, index+2)
 			return i, stmt
 		}
 

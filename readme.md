@@ -39,8 +39,11 @@ Gear Lang is a new programming language built using Go. It is designed to be sim
     ```gear
     start
         struct Person {
-            name : string;
-            age : int;
+            name  string;
+            age  int;
+            greet function void (string name){
+                print 'Hello My' + name + ' name is ';
+            }
         }
 
         let Person john = Person {

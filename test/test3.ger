@@ -1,3 +1,18 @@
 start
-    let string val = john:value;
-end 
+
+    struct Person {
+        name string;
+        age int;
+        greet function void (string name){
+            print 'Hello My' + name + ' name is ';
+        }
+        greet2 function void (string name){
+            print 'Hello My' + name + ' name is ';
+        }
+
+
+    }
+
+    let string val = 100;
+
+end
