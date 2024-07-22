@@ -1,18 +1,22 @@
 start
 
     struct Person {
+        
         name string;
+        
         age int;
+        
         greet function void (string name){
             print 'Hello My' + name + ' name is ';
         }
-        greet2 function void (string name){
-            print 'Hello My' + name + ' name is ';
-        }
 
+        sayBye function void (string name){
+            print 'Bye ' + name + ', see you again!';
+        }
 
     }
 
     let string val = 100;
+    name = 'naveen';
 
 end

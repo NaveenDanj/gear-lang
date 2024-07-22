@@ -11,9 +11,9 @@ func HandleFunctionDeclarationStatement(tokenList []lib.Token, index int, isDefa
 	stepper := 4
 
 	if !isDefault {
-		returnType = tokenList[index+3].Value
+		returnType = tokenList[index+2].Value
 		functionName = tokenList[index].Value
-		stepper = 3
+		stepper = 2
 	}
 
 	paramList := make([]lib.FormalParameter, 0)

@@ -1,6 +1,7 @@
 package nodes
 
 import (
+	"fmt"
 	"gear-lang/pkg/lib"
 	"gear-lang/pkg/util"
 )
@@ -51,12 +52,30 @@ func HandleVariableAssignmentStatement(tokenList []lib.Token, index int) (int, l
 		counter += 1
 	}
 
-	// TODO: have to handle expression strings
-	// prop_exper := util.HandleParsePropertyExpressions(varName , index-1)
 	expr, err := util.ParseExpressionTokens(tokenList[index+1 : counter])
 
 	if err != nil {
 		panic("Error: Error in parsing variable assingment expression")
+	}
+
+	if util.IsPropertyExpressions(varName) {
+		prop_exper := util.HandleParsePropertyExpressions(varName, 0, "")
+		varName := prop_exper
+		fmt.Println("Property assignment")
+		fmt.Printf("%#v\n", prop_exper)
+
+		st := lib.VaribleAssignmentStatement{
+			VariableName: varName,
+			Expression:   expr,
+		}
+
+		newStatement := lib.Statement{
+			StatementType: "VARIABLE_ASSIGNMENT",
+			Value:         st,
+		}
+
+		return counter, newStatement
+
 	}
 
 	st := lib.VaribleAssignmentStatement{

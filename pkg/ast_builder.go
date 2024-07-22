@@ -198,7 +198,7 @@ func (ast *ASTBuilder) ParseStructBlockStatement(tokenList []lib.Token, stmtList
 			structField.Body = lib.Statement{StatementType: "STRUCT_FIELD", Value: nil}
 			newSt := lib.Statement{StatementType: "STRUCT_FIELD", Value: structField}
 			stmtList = append(stmtList, newSt)
-			i, stmt := ast.ParseStructBlockStatement(tokenList, stmtList, index+2)
+			i, stmt := ast.ParseStructBlockStatement(tokenList, stmtList, index+3)
 			return i, stmt
 		}
 
