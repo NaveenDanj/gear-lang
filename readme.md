@@ -111,7 +111,7 @@ Gear Lang is a new programming language built using Go. It is designed to be sim
 
 
 
-## Getting Started
+## Getting Started (Coming soon!!!)
 
 To get started with Gear Lang, follow these steps:
 
