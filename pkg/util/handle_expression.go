@@ -3,7 +3,6 @@ package util
 import (
 	"fmt"
 	"gear-lang/pkg/lib"
-	"strings"
 )
 
 func ParseExpression(index int, tokens []lib.Token, rlist []lib.Token) (*lib.Expression, int, error) {
@@ -55,11 +54,13 @@ func parsePrimaryExpression(tokens []lib.Token, index int) (*lib.Expression, int
 	switch token.Type {
 	case "NUMERIC_LITERAL", "IDENTIFIER", "STRING_LITERAL":
 
-		// if token.Type == "IDENTIFIER" {
-		// 	if IsPropertyExpressions() {
-
-		// 	}
-		// }
+		if token.Type == "IDENTIFIER" {
+			if IsPropertyExpressions(token.Value) {
+				struct_expr := HandleParsePropertyExpressions(token.Value, index, "")
+				expr_val := lib.Expression{Value: struct_expr.PropertyName.Value}
+				return &expr_val, index + 1, nil
+			}
+		}
 
 		value := token.Value
 		index++
@@ -89,21 +90,22 @@ func ParseExpressionTokens(tokens []lib.Token) (*lib.Expression, error) {
 	return result, err
 }
 
-func ParseObjectPropertyExpressions(str string) *lib.ObjectPropertyAccessExpression {
+// func ParseObjectPropertyExpressions(str string) *lib.ObjectPropertyAccessExpression {
 
-	// split the string by : operator
-	parts := strings.Split(str, ":")
+// 	// split the string by : operator
+// 	parts := strings.Split(str, ":")
 
-	if len(parts) != 2 {
-		return nil
-	}
+// 	if len(parts) != 2 {
+// 		return nil
+// 	}
 
-	newObject := lib.ObjectPropertyAccessExpression{
-		ObjectName:   parts[0],
-		PropertyName: parts[0],
-	}
-	return &newObject
-}
+// 	newObject := lib.ObjectPropertyAccessExpression{
+// 		ObjectName:   parts[0],
+// 		PropertyName: parts[0],
+// 		Value:        "",
+// 	}
+// 	return &newObject
+// }
 
 func IsPropertyExpressions(str string) bool {
 	for i := 0; i < len(str); i++ {
@@ -114,25 +116,27 @@ func IsPropertyExpressions(str string) bool {
 	return false
 }
 
-func HandleParsePropertyExpressions(index int, str string, prevObject string, prevProperty string, prevType string) *lib.ObjectPropertyAccessExpression {
+func HandleParsePropertyExpressions(str string, index int, prevString string) *lib.ObjectPropertyAccessExpression {
 
-	if index == len(str) {
+	if index == len(str)-1 {
+		prevString += string(str[index])
 		return &lib.ObjectPropertyAccessExpression{
-			ObjectName:   prevObject,
-			PropertyName: prevProperty,
+			ObjectName:   "",
+			PropertyName: nil,
+			Value:        prevString,
 		}
 	}
 
-	if str[index] == ':' && prevType == "Object" {
-		index++ // skip the :
-		return HandleParsePropertyExpressions(index, str[index:], prevObject, str[:index-1], "Property")
+	if str[index] == ':' {
+		index++
+		temp := prevString
+		prevString = ""
+		return &lib.ObjectPropertyAccessExpression{
+			ObjectName:   temp,
+			PropertyName: HandleParsePropertyExpressions(str, index, prevString),
+		}
 	}
 
-	if str[index] == ':' && prevType == "Property" {
-		index++ // skip the :
-		return HandleParsePropertyExpressions(index, str[index:], prevObject, prevType, "Object")
-	}
-
-	return HandleParsePropertyExpressions(index, str[index:], prevObject, prevType, "Object")
-
+	prevString += string(str[index])
+	return HandleParsePropertyExpressions(str, index+1, prevString)
 }

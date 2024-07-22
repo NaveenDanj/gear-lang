@@ -104,5 +104,6 @@ type VaribleAssignmentStatement struct {
 
 type ObjectPropertyAccessExpression struct {
 	ObjectName   string
-	PropertyName string
+	PropertyName *ObjectPropertyAccessExpression
+	Value        string
 }
