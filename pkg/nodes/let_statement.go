@@ -19,6 +19,31 @@ func HandleVariableDeclarationStatement(tokenList []lib.Token, index int) (int, 
 	}
 
 	// TODO: have to handle expression strings
+	if tokenList[index+4].Type == "LEFT_BRACKET" {
+		expr, _, _ := util.ParseArrayInitExpression(tokenList, 0, make([]*lib.Expression, 0), 0)
+
+		// fmt.Println("Array expression -> ")
+		// fmt.Printf("%#v\n", m)
+
+		newLetStatement := lib.LetStatement{
+			VariableName: varName,
+			DataType:     dataType,
+			Expression:   expr,
+		}
+
+		newStatement := lib.Statement{
+			StatementType: "VARIABLE_DECLARATION",
+			Value:         newLetStatement,
+		}
+
+		// fmt.Print("Expr is read: ")
+		// val, _ := newLetStatement.Expression.(lib.ArrayExpressionStatement)
+		// fmt.Printf("%#v\n", val.Body)
+
+		return counter, newStatement
+
+	}
+	fmt.Print(tokenList[index+4 : counter])
 	expr, err := util.ParseExpressionTokens(tokenList[index+4 : counter])
 
 	// expr.PrintExpression("", true)

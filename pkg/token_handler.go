@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"fmt"
 	"gear-lang/pkg/lib"
 )
 
@@ -141,6 +140,8 @@ func (t *TokenDriver) Tokenizer(lexemeList []Lexeme) {
 			lex.LexType == "LEFT_PARANTHESES" ||
 			lex.LexType == "WHITESPACE" ||
 			t.Operators[lex.LexType] != 0 ||
+			lex.LexType == "RIGHT_BRACKET" ||
+			lex.LexType == "LEFT_BRACKET" ||
 			lex.LexType == "SEMICOLON" {
 
 			isKeyword := checkAndParseKeyword(str, t)
@@ -174,8 +175,8 @@ func (t *TokenDriver) Tokenizer(lexemeList []Lexeme) {
 
 	removeEmptyTokens(t)
 
-	for _, t := range t.TokenList {
-		fmt.Printf("Token Type : %s , Token Value : %s \n", t.Type, t.Value)
-	}
+	// for _, t := range t.TokenList {
+	// 	fmt.Printf("Token Type : %s , Token Value : %s \n", t.Type, t.Value)
+	// }
 
 }

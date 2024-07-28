@@ -51,7 +51,11 @@ func checkAndParseNumericLiteral(lexemeList []Lexeme, index int, t *TokenDriver)
 
 	str := ""
 
-	if index != 0 && (!IsDigit(lexemeList[index-1].Value) && (t.Operators[lexemeList[index-1].LexType] == 0 && lexemeList[index-1].LexType != "WHITESPACE" && lexemeList[index-1].LexType != "LEFT_PARANTHESES")) {
+	if index != 0 && (!IsDigit(lexemeList[index-1].Value) && (t.Operators[lexemeList[index-1].LexType] == 0 &&
+		lexemeList[index-1].LexType != "WHITESPACE" &&
+		lexemeList[index-1].LexType != "LEFT_PARANTHESES" &&
+		lexemeList[index-1].LexType != "LEFT_BRACKET" &&
+		lexemeList[index-1].LexType != "COMMA")) {
 		return false, index
 	}
 

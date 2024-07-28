@@ -55,5 +55,4 @@ start
     john:greet1(john:name );
     john:sayAge(john:age);
 
-
 end 

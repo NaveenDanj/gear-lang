@@ -1,6 +1,6 @@
 start
 
-    struct Person {
+    struct Person  {
         
         name string;
         
@@ -18,5 +18,8 @@ start
 
     let string val = 100;
     name = 'naveen';
+
+    let int[] myArr = [1,2,3,4,5];
+
 
 end

@@ -107,3 +107,11 @@ type ObjectPropertyAccessExpression struct {
 	PropertyName *ObjectPropertyAccessExpression
 	Value        string
 }
+
+type ArrayExpressionElement struct {
+	Elements []*ExpressionGenericType // Slice of pointers to Expression, representing elements of the array
+}
+
+type ExpressionGenericType struct {
+	Expression interface{}
+}

@@ -56,7 +56,7 @@ func parsePrimaryBooleanExpression(tokens []lib.Token, index int) (*lib.Expressi
 	token := tokens[index]
 
 	switch token.Type {
-	case "BOOLEAN_LITERAL", "IDENTIFIER", "STRING_LITERAL":
+	case "BOOLEAN_LITERAL", "IDENTIFIER", "STRING_LITERAL", "NUMERIC_LITERAL":
 		value := token.Value
 		index++
 		return &lib.Expression{Value: value}, index, nil
