@@ -1,63 +1,43 @@
 package util
 
 import (
-	"errors"
-	"fmt"
 	"gear-lang/pkg/lib"
 )
 
-func ParseArrayInitExpression(list []lib.Token, index int, currentList []*lib.Expression, prevExpIndex int) ([]*lib.Expression, int, error) {
+func ParseArrayExpression(list []lib.Token, startIndex int) (lib.ArrayExpressionElement, int) {
+	arrList := make([]lib.ArrayExpressionElement, 0) // Changed to interface{} to accommodate both arrays and individual elements
+	lastElemIndex := startIndex
+	index := startIndex
 
-	// var outList = make(map[int][]*lib.Expression)
+	for index < len(list) && list[index].Type != "SEMICOLON" {
+		token := list[index]
 
-	if index >= len(list) {
-		return currentList, index, nil
+		if token.Type == "LEFT_BRACKET" {
+			// Parse nested array
+			elem, newIndex := ParseArrayExpression(list, index+1)
+			arrList = append(arrList, elem)
+			lastElemIndex = newIndex + 1
+			index = newIndex
+			continue
+
+		} else if token.Type == "RIGHT_BRACKET" {
+			// End of the array, parse the last element before the bracket
+			if lastElemIndex < index {
+				expr, _ := ParseExpressionTokens(list[lastElemIndex:index])
+				arrList = append(arrList, lib.ArrayExpressionElement{Elements: expr})
+			}
+			return lib.ArrayExpressionElement{Elements: arrList}, index + 1
+
+		} else if token.Type == "COMMA" {
+			// Parse element between commas
+			if lastElemIndex < index {
+				expr, _ := ParseExpressionTokens(list[lastElemIndex:index])
+				arrList = append(arrList, lib.ArrayExpressionElement{Elements: expr})
+			}
+			lastElemIndex = index + 1
+		}
+		index++
 	}
 
-	switch list[index].Type {
-	case "LEFT_BRACKET":
-		var newList []*lib.Expression
-		res, outIndex, err := ParseArrayInitExpression(list, index+1, newList, index+1)
-		if err != nil {
-			return nil, 0, err
-		}
-
-		// for i := 0; i < len(res); i++ {
-		// 	currentList = append(currentList, res[i])
-		// }
-
-		fmt.Println("---------------------------------------- ->")
-		for i := 0; i < len(res); i++ {
-			fmt.Printf("%#v\n", res[i])
-			// outList = append(outList, res[i])
-		}
-		fmt.Println("---------------------------------------- -<")
-
-		return ParseArrayInitExpression(list, outIndex, currentList, outIndex)
-
-	case "RIGHT_BRACKET":
-		exprTokenList := list[prevExpIndex:index]
-		if len(exprTokenList) > 0 {
-			exp, err := ParseExpressionTokens(exprTokenList)
-			if err != nil {
-				return nil, 0, errors.New("error while parsing array expression: " + err.Error())
-			}
-			currentList = append(currentList, exp)
-		}
-		return currentList, index + 1, nil
-
-	case "COMMA":
-		exprTokenList := list[prevExpIndex:index]
-		if len(exprTokenList) > 0 {
-			exp, err := ParseExpressionTokens(exprTokenList)
-			if err != nil {
-				return nil, 0, errors.New("error while parsing array expression: " + err.Error())
-			}
-			currentList = append(currentList, exp)
-		}
-		return ParseArrayInitExpression(list, index+1, currentList, index+1)
-
-	default:
-		return ParseArrayInitExpression(list, index+1, currentList, prevExpIndex)
-	}
+	return arrList[0], index
 }

@@ -109,7 +109,7 @@ type ObjectPropertyAccessExpression struct {
 }
 
 type ArrayExpressionElement struct {
-	Elements []*ExpressionGenericType // Slice of pointers to Expression, representing elements of the array
+	Elements interface{}
 }
 
 type ExpressionGenericType struct {
