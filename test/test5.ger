@@ -1,3 +1,12 @@
 start
-    let ArrayList arr1 = [1,2,3,4,5,6 , [7,8,9]];
+    let ArrayList arr1 = [
+        [1,2,3],
+        [4,5,6],
+        [7,8,9]
+    ];
+
+    while( a == 10 ){
+        print 'hello world';
+    }
+
 end

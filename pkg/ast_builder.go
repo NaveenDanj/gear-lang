@@ -20,7 +20,6 @@ func (ast *ASTBuilder) Parse(index int) {
 
 		for _, item := range ast.Program.Statements {
 			// val, ok := item.Value.(lib.LetStatement)
-
 			fmt.Printf("%#v\n", item)
 			fmt.Println("----------------------------------------")
 		}
@@ -82,7 +81,7 @@ func (ast *ASTBuilder) handleKeyword(keyword string, i int) (int, lib.Statement)
 	case "while":
 		index, whileStmt := nodes.HandleWhileStatementCondition(ast.TokenList, i)
 		var l []lib.Statement
-		newIndex, block := ast.ParseBlockStatement(ast.TokenList, l, index)
+		newIndex, block := ast.ParseBlockStatementExpr(ast.TokenList, l, index)
 		block.StatementType = "BLOCK_STATEMENT"
 		whileStmt.Body = block
 		newSt := lib.Statement{StatementType: "WHILE_STATEMENT", Value: whileStmt}
@@ -204,4 +203,41 @@ func (ast *ASTBuilder) ParseStructBlockStatement(tokenList []lib.Token, stmtList
 
 	}
 
+}
+
+// experimental block parsing function
+
+func (ast *ASTBuilder) ParseBlockStatementExpr(tokenList []lib.Token, stmtList []lib.Statement, index int) (int, lib.Statement) {
+	for index < len(tokenList) {
+		token := tokenList[index]
+		switch token.Type {
+		case "LEFT_BRACE":
+			newIndex, stmt := ast.ParseBlockStatementExpr(tokenList, []lib.Statement{}, index+1)
+			stmtList = append(stmtList, stmt)
+			index = newIndex
+		case "RIGHT_BRACE":
+			newBlock := lib.StatementBlock{
+				Type:       "StatementBlock",
+				Statements: stmtList,
+			}
+			newStmt := lib.Statement{
+				StatementType: "StatementBlock",
+				Value:         newBlock,
+			}
+			return index + 1, newStmt
+		case "KEYWORD":
+			newIndex, stmt := ast.handleKeyword(token.Value, index)
+			stmtList = append(stmtList, stmt)
+			index = newIndex
+
+		default:
+			// _, stmt := ast.ParseBlockStatementExpr(tokenList, stmtList, index_out)
+			// stmtList = append(stmtList, stmt)
+			continue
+		}
+		index++
+	}
+	return index, lib.Statement{
+		StatementType: "IncompleteBlock", // Indicate that the block is incomplete if it reaches the end
+	}
 }
