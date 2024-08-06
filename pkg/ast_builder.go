@@ -81,7 +81,7 @@ func (ast *ASTBuilder) handleKeyword(keyword string, i int) (int, lib.Statement)
 	case "while":
 		index, whileStmt := nodes.HandleWhileStatementCondition(ast.TokenList, i)
 		var l []lib.Statement
-		newIndex, block := ast.ParseBlockStatementExpr(ast.TokenList, l, index)
+		newIndex, block := ast.ParseBlockStatement(ast.TokenList, l, index)
 		block.StatementType = "BLOCK_STATEMENT"
 		whileStmt.Body = block
 		newSt := lib.Statement{StatementType: "WHILE_STATEMENT", Value: whileStmt}
@@ -113,41 +113,41 @@ func (ast *ASTBuilder) handleKeyword(keyword string, i int) (int, lib.Statement)
 
 }
 
-func (ast *ASTBuilder) ParseBlockStatement(tokenList []lib.Token, stmtList []lib.Statement, index int) (int, lib.Statement) {
+// func (ast *ASTBuilder) ParseBlockStatement(tokenList []lib.Token, stmtList []lib.Statement, index int) (int, lib.Statement) {
 
-	if tokenList[index].Type == "LEFT_BRACE" {
-		i := index + 1
-		var l []lib.Statement
-		i, stmt := ast.ParseBlockStatement(tokenList, l, i)
-		return i, stmt
-	} else if tokenList[index].Type == "RIGHT_BRACE" {
+// 	if tokenList[index].Type == "LEFT_BRACE" {
+// 		i := index + 1
+// 		var l []lib.Statement
+// 		i, stmt := ast.ParseBlockStatement(tokenList, l, i)
+// 		return i, stmt
+// 	} else if tokenList[index].Type == "RIGHT_BRACE" {
 
-		newBlock := lib.StatementBlock{
-			Type:       "StatementBlock",
-			Statements: stmtList,
-		}
+// 		newBlock := lib.StatementBlock{
+// 			Type:       "StatementBlock",
+// 			Statements: stmtList,
+// 		}
 
-		newStmt := lib.Statement{
-			StatementType: "StatementBlock",
-			Value:         newBlock,
-		}
+// 		newStmt := lib.Statement{
+// 			StatementType: "StatementBlock",
+// 			Value:         newBlock,
+// 		}
 
-		return index, newStmt
+// 		return index, newStmt
 
-	} else {
-		index_out, stmt := ast.handleKeyword(tokenList[index].Value, index)
+// 	} else {
+// 		index_out, stmt := ast.handleKeyword(tokenList[index].Value, index)
 
-		if stmt.StatementType == "Unhandled" {
-			// fmt.Println("unhandled keyword in block statement")
-		} else {
-			stmtList = append(stmtList, stmt)
-		}
+// 		if stmt.StatementType == "Unhandled" {
+// 			// fmt.Println("unhandled keyword in block statement")
+// 		} else {
+// 			stmtList = append(stmtList, stmt)
+// 		}
 
-		i, stmt := ast.ParseBlockStatement(tokenList, stmtList, index_out)
-		return i, stmt
-	}
+// 		i, stmt := ast.ParseBlockStatement(tokenList, stmtList, index_out)
+// 		return i, stmt
+// 	}
 
-}
+// }
 
 func (ast *ASTBuilder) ParseStructBlockStatement(tokenList []lib.Token, stmtList []lib.Statement, index int) (int, lib.Statement) {
 
@@ -205,39 +205,56 @@ func (ast *ASTBuilder) ParseStructBlockStatement(tokenList []lib.Token, stmtList
 
 }
 
-// experimental block parsing function
-
-func (ast *ASTBuilder) ParseBlockStatementExpr(tokenList []lib.Token, stmtList []lib.Statement, index int) (int, lib.Statement) {
+func (ast *ASTBuilder) ParseBlockStatement(tokenList []lib.Token, stmtList []lib.Statement, index int) (int, lib.Statement) {
 	for index < len(tokenList) {
 		token := tokenList[index]
 		switch token.Type {
 		case "LEFT_BRACE":
-			newIndex, stmt := ast.ParseBlockStatementExpr(tokenList, []lib.Statement{}, index+1)
-			stmtList = append(stmtList, stmt)
+			// Recursively parse the nested block
+			newIndex, block := ast.ParseBlockStatement(tokenList, []lib.Statement{}, index+1)
+			stmtList = append(stmtList, block)
 			index = newIndex
+			continue
 		case "RIGHT_BRACE":
+			// Return the current block when encountering a closing brace
 			newBlock := lib.StatementBlock{
 				Type:       "StatementBlock",
 				Statements: stmtList,
 			}
-			newStmt := lib.Statement{
-				StatementType: "StatementBlock",
+
+			// fmt.Println("new stmt : ", newBlock)
+
+			return index, lib.Statement{
+				StatementType: "BLOCK_STATEMENT",
 				Value:         newBlock,
 			}
-			return index + 1, newStmt
 		case "KEYWORD":
+			// Handle various keywords
 			newIndex, stmt := ast.handleKeyword(token.Value, index)
-			stmtList = append(stmtList, stmt)
-			index = newIndex
-
-		default:
-			// _, stmt := ast.ParseBlockStatementExpr(tokenList, stmtList, index_out)
-			// stmtList = append(stmtList, stmt)
+			// fmt.Println("new stmt : KEYWORD", stmt)
+			if stmt.StatementType != "Unhandled" {
+				stmtList = append(stmtList, stmt)
+			}
+			index = newIndex + 1
 			continue
+		default:
+			// Handle other statements
+			// newIndex, stmt := ast.parseStatement(tokenList, index)
+			// if stmt.StatementType != "Unhandled" {
+			// 	stmtList = append(stmtList, stmt)
+			// }
+			// index++
 		}
 		index++
 	}
+
+	// Handle case where there is no matching RIGHT_BRACE
+	newBlock := lib.StatementBlock{
+		Type:       "StatementBlock",
+		Statements: stmtList,
+	}
 	return index, lib.Statement{
-		StatementType: "IncompleteBlock", // Indicate that the block is incomplete if it reaches the end
+		StatementType: "BLOCK_STATEMENT",
+		Value:         newBlock,
 	}
 }

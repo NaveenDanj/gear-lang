@@ -6,7 +6,21 @@ start
     ];
 
     while( a == 10 ){
+        
         print 'hello world';
+        
+        while( a == 10 ){
+            print 'hello again!';
+        }
+
+        let int val = 100 + 20;
+
+        if(a == 10){
+            let string name = 'naveen dhananjaya';
+        }else{
+            let int age = 23; 
+        }
+
     }
 
 end
