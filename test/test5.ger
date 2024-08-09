@@ -1,4 +1,7 @@
 start
+
+    import 'new_package.gear';
+
     let ArrayList arr1 = [
         [1,2,3],
         [4,5,6],
@@ -22,5 +25,12 @@ start
         }
 
     }
+
+    function void greet(){
+        print 'hello world';
+        let int newVal = lastVal;
+    }
+
+    greet(myName , 'hello world' , max(10 , 20) + (100/2) );
 
 end

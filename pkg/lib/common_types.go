@@ -12,6 +12,7 @@ type LexemeDriver struct {
 type Token struct {
 	Type  string
 	Value string
+	Other interface{}
 }
 
 type TokenDriver struct {
@@ -114,4 +115,9 @@ type ArrayExpressionElement struct {
 
 type ExpressionGenericType struct {
 	Expression interface{}
+}
+
+type FunctionCallExpression struct {
+	FunctionName string
+	Arguments    []ExpressionGenericType
 }

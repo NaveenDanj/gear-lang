@@ -73,7 +73,9 @@ func CheckIsIdentifier(str string) bool {
 	valid := make(map[byte]int)
 	valid['}'] = 1
 	valid[')'] = 1
+	valid['('] = 1
 	valid[']'] = 1
+	valid['['] = 1
 	valid[';'] = 1
 	valid[','] = 1
 	valid['+'] = 1

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gear-lang/pkg/lib"
 	"gear-lang/pkg/nodes"
+	"gear-lang/pkg/util"
 )
 
 type ASTBuilder struct {
@@ -43,6 +44,19 @@ func (ast *ASTBuilder) Parse(index int) {
 		ast.CurrentStatementIndex = index
 	} else {
 		ast.CurrentStatementIndex += 1
+
+		// check whether the token is a possible function calling expression
+		if ast.TokenList[ast.CurrentStatementIndex].Type == "IDENTIFIER" && ast.TokenList[ast.CurrentStatementIndex+1].Type == "LEFT_PARANTHESES" {
+			fmt.Println("Possible function calling expression!")
+			// fmt.Println("Expr -> " + ast.TokenList[ast.CurrentStatementIndex].Value + " " + ast.TokenList[ast.CurrentStatementIndex+1].Value)
+			closeParan := util.GetFunctionCallerMatchingParan(ast.TokenList, ast.CurrentStatementIndex+1)
+			fmt.Println("close paran => ", ast.TokenList[closeParan-1].Value)
+			funcExpr, newIndex := util.HandlePreProcessFunctionCallExpression(ast.TokenList, ast.CurrentStatementIndex+2, closeParan)
+			ast.CurrentStatementIndex = newIndex
+			fmt.Println("Function expression is => ", funcExpr)
+			fmt.Printf("%#v\n", funcExpr.Arguments[2].Right)
+		}
+
 	}
 
 	ast.Parse(ast.CurrentStatementIndex)
@@ -113,42 +127,6 @@ func (ast *ASTBuilder) handleKeyword(keyword string, i int) (int, lib.Statement)
 
 }
 
-// func (ast *ASTBuilder) ParseBlockStatement(tokenList []lib.Token, stmtList []lib.Statement, index int) (int, lib.Statement) {
-
-// 	if tokenList[index].Type == "LEFT_BRACE" {
-// 		i := index + 1
-// 		var l []lib.Statement
-// 		i, stmt := ast.ParseBlockStatement(tokenList, l, i)
-// 		return i, stmt
-// 	} else if tokenList[index].Type == "RIGHT_BRACE" {
-
-// 		newBlock := lib.StatementBlock{
-// 			Type:       "StatementBlock",
-// 			Statements: stmtList,
-// 		}
-
-// 		newStmt := lib.Statement{
-// 			StatementType: "StatementBlock",
-// 			Value:         newBlock,
-// 		}
-
-// 		return index, newStmt
-
-// 	} else {
-// 		index_out, stmt := ast.handleKeyword(tokenList[index].Value, index)
-
-// 		if stmt.StatementType == "Unhandled" {
-// 			// fmt.Println("unhandled keyword in block statement")
-// 		} else {
-// 			stmtList = append(stmtList, stmt)
-// 		}
-
-// 		i, stmt := ast.ParseBlockStatement(tokenList, stmtList, index_out)
-// 		return i, stmt
-// 	}
-
-// }
-
 func (ast *ASTBuilder) ParseStructBlockStatement(tokenList []lib.Token, stmtList []lib.Statement, index int) (int, lib.Statement) {
 
 	if tokenList[index].Type == "LEFT_BRACE" {
@@ -206,6 +184,7 @@ func (ast *ASTBuilder) ParseStructBlockStatement(tokenList []lib.Token, stmtList
 }
 
 func (ast *ASTBuilder) ParseBlockStatement(tokenList []lib.Token, stmtList []lib.Statement, index int) (int, lib.Statement) {
+
 	for index < len(tokenList) {
 		token := tokenList[index]
 		switch token.Type {
@@ -257,4 +236,5 @@ func (ast *ASTBuilder) ParseBlockStatement(tokenList []lib.Token, stmtList []lib
 		StatementType: "BLOCK_STATEMENT",
 		Value:         newBlock,
 	}
+
 }
