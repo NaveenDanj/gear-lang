@@ -52,9 +52,15 @@ func (ast *ASTBuilder) Parse(index int) {
 			closeParan := util.GetFunctionCallerMatchingParan(ast.TokenList, ast.CurrentStatementIndex+1)
 			fmt.Println("close paran => ", ast.TokenList[closeParan-1].Value)
 			funcExpr, newIndex := util.HandlePreProcessFunctionCallExpression(ast.TokenList, ast.CurrentStatementIndex+2, closeParan)
+
+			if ast.TokenList[closeParan+1].Type == "SEMICOLON" {
+				ast.Program.Statements = append(ast.Program.Statements, lib.Statement{
+					StatementType: "FunctionCallExpression",
+					Value:         funcExpr,
+				})
+			}
+
 			ast.CurrentStatementIndex = newIndex
-			fmt.Println("Function expression is => ", funcExpr)
-			fmt.Printf("%#v\n", funcExpr.Arguments[2].Right)
 		}
 
 	}

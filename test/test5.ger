@@ -31,6 +31,7 @@ start
         let int newVal = lastVal;
     }
 
-    greet(myName , 'hello world' , max(10 , 20) + (100/2) );
+    greet(myName , 'hello world' , max(10+11000 , 20) + (100/2) );
+    greet('hello world');
 
 end

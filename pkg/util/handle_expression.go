@@ -5,11 +5,6 @@ import (
 	"gear-lang/pkg/lib"
 )
 
-type FunctionCallExpressionToken struct {
-	FunctionName string
-	Arguments    []*lib.Expression
-}
-
 func ParseExpression(index int, tokens []lib.Token, rlist []lib.Token) (*lib.Expression, int, error) {
 	if index >= len(tokens) {
 		return nil, index, fmt.Errorf("unexpected end of tokens")
@@ -135,7 +130,7 @@ func HandleParsePropertyExpressions(str string, index int, prevString string) *l
 }
 
 // TODO: function call expression
-func HandlePreProcessFunctionCallExpression(tokens []lib.Token, index int, closeParan int) (FunctionCallExpressionToken, int) {
+func HandlePreProcessFunctionCallExpression(tokens []lib.Token, index int, closeParan int) (lib.FunctionCallExpression, int) {
 	funcName := tokens[index-2].Value
 	// lastSepIndex := index
 	argumentList := make([]*lib.Expression, 0)
@@ -175,18 +170,15 @@ func HandlePreProcessFunctionCallExpression(tokens []lib.Token, index int, close
 			argumentList = append(argumentList, expr)
 
 			// funcTokenList = make([]lib.Token, 0)
-			funcCallExpressionToken := FunctionCallExpressionToken{
+			funcCallExpressionToken := lib.FunctionCallExpression{
 				FunctionName: funcName,
 				Arguments:    argumentList,
 			}
-
-			fmt.Println("Out is ===> ", funcTokenList)
 
 			return funcCallExpressionToken, index + 1
 
 		} else if token.Type == "COMMA" {
 			// parse the expression from the lastSepIndex
-			fmt.Println("out list -> ", funcTokenList)
 			expr, err := ParseExpressionTokens(funcTokenList)
 
 			if err != nil {
@@ -214,7 +206,7 @@ func HandlePreProcessFunctionCallExpression(tokens []lib.Token, index int, close
 
 	}
 
-	return FunctionCallExpressionToken{
+	return lib.FunctionCallExpression{
 		FunctionName: funcName,
 		Arguments:    argumentList,
 	}, closeParan

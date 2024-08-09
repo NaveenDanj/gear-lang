@@ -119,5 +119,5 @@ type ExpressionGenericType struct {
 
 type FunctionCallExpression struct {
 	FunctionName string
-	Arguments    []ExpressionGenericType
+	Arguments    []*Expression
 }
