@@ -19,11 +19,11 @@ func (ast *ASTBuilder) Parse(index int) {
 
 	if len(ast.TokenList) == 0 || ast.CurrentStatementIndex == len(ast.TokenList)-1 {
 
-		for _, item := range ast.Program.Statements {
-			// val, ok := item.Value.(lib.LetStatement)
-			fmt.Printf("%#v\n", item)
-			fmt.Println("----------------------------------------")
-		}
+		// for _, item := range ast.Program.Statements {
+		// 	// val, ok := item.Value.(lib.LetStatement)
+		// 	fmt.Printf("%#v\n", item)
+		// 	fmt.Println("----------------------------------------")
+		// }
 
 		return
 	}
@@ -47,11 +47,8 @@ func (ast *ASTBuilder) Parse(index int) {
 
 		// check whether the token is a possible function calling expression
 		if ast.TokenList[ast.CurrentStatementIndex].Type == "IDENTIFIER" && ast.TokenList[ast.CurrentStatementIndex+1].Type == "LEFT_PARANTHESES" {
-			fmt.Println("Possible function calling expression!")
-			// fmt.Println("Expr -> " + ast.TokenList[ast.CurrentStatementIndex].Value + " " + ast.TokenList[ast.CurrentStatementIndex+1].Value)
 			closeParan := util.GetFunctionCallerMatchingParan(ast.TokenList, ast.CurrentStatementIndex+1)
-			fmt.Println("close paran => ", ast.TokenList[closeParan-1].Value)
-			funcExpr, newIndex := util.HandlePreProcessFunctionCallExpression(ast.TokenList, ast.CurrentStatementIndex+2, closeParan)
+			funcExpr, _ := util.HandlePreProcessFunctionCallExpression(ast.TokenList, ast.CurrentStatementIndex+2, closeParan)
 
 			if ast.TokenList[closeParan+1].Type == "SEMICOLON" {
 				ast.Program.Statements = append(ast.Program.Statements, lib.Statement{
@@ -60,8 +57,16 @@ func (ast *ASTBuilder) Parse(index int) {
 				})
 			}
 
-			ast.CurrentStatementIndex = newIndex
+			ast.CurrentStatementIndex = closeParan
+		} else if ast.TokenList[ast.CurrentStatementIndex].Type == "IDENTIFIER" && ast.TokenList[ast.CurrentStatementIndex+1].Type == "LEFT_BRACKET" {
+			closeBracket := util.GetArrayIndexAccessMatchingBracket(ast.TokenList, ast.CurrentStatementIndex+1)
+			arrExpr, _ := util.HandlePreProcessFunctionCallExpression(ast.TokenList, ast.CurrentStatementIndex+2, closeBracket)
+			fmt.Print("Array expression := ")
+			fmt.Println(arrExpr)
+
 		}
+
+		// check whether the token is a possible array index reference expression
 
 	}
 
@@ -88,7 +93,7 @@ func (ast *ASTBuilder) handleKeyword(keyword string, i int) (int, lib.Statement)
 		block.StatementType = "BLOCK_STATEMENT"
 		ifStatement.ThenBlock = block
 
-		if ast.TokenList[newIndex+1].Type == "KEYWORD" && ast.TokenList[newIndex+1].Value == "else" {
+		if newIndex+1 < len(ast.TokenList) && ast.TokenList[newIndex+1].Type == "KEYWORD" && ast.TokenList[newIndex+1].Value == "else" {
 			var l []lib.Statement
 			newElseIndex, else_block := ast.ParseBlockStatement(ast.TokenList, l, newIndex+2)
 			else_block.StatementType = "BLOCK_STATEMENT"

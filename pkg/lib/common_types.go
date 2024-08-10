@@ -121,3 +121,8 @@ type FunctionCallExpression struct {
 	FunctionName string
 	Arguments    []*Expression
 }
+
+type ArrayIndexAccessExpression struct {
+	ArrayName       string
+	IndexExpression []*Expression
+}

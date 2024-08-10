@@ -129,7 +129,6 @@ func HandleParsePropertyExpressions(str string, index int, prevString string) *l
 	return HandleParsePropertyExpressions(str, index+1, prevString)
 }
 
-// TODO: function call expression
 func HandlePreProcessFunctionCallExpression(tokens []lib.Token, index int, closeParan int) (lib.FunctionCallExpression, int) {
 	funcName := tokens[index-2].Value
 	// lastSepIndex := index
@@ -213,6 +212,70 @@ func HandlePreProcessFunctionCallExpression(tokens []lib.Token, index int, close
 
 }
 
+// Handle access array index function
+func HandleAccessArrayIndexExpression(tokens []lib.Token, index int, closeBracket int) (lib.ArrayIndexAccessExpression, int) {
+
+	// find the last couple of brackets of the array index access expression
+	exprTokenList := make([]lib.Token, 0)
+	arrayName := tokens[index-1].Value
+	bracketExprList := make([]*lib.Expression, 0)
+
+	for index < closeBracket {
+
+		token := tokens[index]
+
+		if token.Type == "LEFT_BRACKET" {
+
+			// get the last closing bracket index
+			closeBracket := GetArrayIndexAccessMatchingBracket(tokens, index)
+			// recursively call the handle access array index expression function
+			outElem, _ := HandleAccessArrayIndexExpression(tokens, index+1, closeBracket)
+
+			newToken := lib.Token{
+				Type:  "ArrayIndexAccessExpression",
+				Other: outElem,
+			}
+
+			exprTokenList = append(exprTokenList, newToken)
+
+			index = closeBracket + 1
+			continue
+
+		} else if token.Type == "RIGHT_BRACKET" && index == closeBracket {
+
+			// parse the token into expressions
+			expr, err := ParseExpressionTokens(exprTokenList)
+			bracketExprList = append(bracketExprList, expr)
+
+			if err != nil {
+				panic("Error while parsing array index expression!")
+			}
+
+			// create new token
+			newArrayExpression := lib.ArrayIndexAccessExpression{
+				ArrayName:       arrayName,
+				IndexExpression: bracketExprList,
+			}
+
+			return newArrayExpression, index + 1
+
+		} else {
+			exprTokenList = append(exprTokenList, tokens[index])
+		}
+
+		index++
+
+	}
+
+	newArrayExpression := lib.ArrayIndexAccessExpression{
+		ArrayName:       arrayName,
+		IndexExpression: bracketExprList,
+	}
+
+	return newArrayExpression, closeBracket + 1
+
+}
+
 func GetFunctionCallerMatchingParan(tokens []lib.Token, index int) int {
 	stack := make([]lib.Token, 0)
 
@@ -238,4 +301,31 @@ func GetFunctionCallerMatchingParan(tokens []lib.Token, index int) int {
 	}
 
 	return -1
+}
+
+func GetArrayIndexAccessMatchingBracket(tokens []lib.Token, index int) int {
+
+	stack := make([]lib.Token, 0)
+
+	for index < len(tokens) {
+
+		if tokens[index].Type == "LEFT_BRACKET" {
+			stack = append(stack, tokens[index])
+			index++
+			continue
+		} else if tokens[index].Type == "RIGHT_BRACKET" {
+
+			stack = stack[0 : len(stack)-1]
+
+			if len(stack) == 0 {
+				return index
+			}
+
+		}
+
+		return -1
+	}
+
+	return index
+
 }

@@ -34,4 +34,14 @@ start
     greet(myName , 'hello world' , max(10+11000 , 20) + (100/2) );
     greet('hello world');
 
+    let string name = 'naveen';
+
+    if(a == 10){
+        let string name = 'naveen dhananjaya';
+    }else{
+        print 'naveen hettiwaththa!';
+    }
+
+    newArray [0];
+
 end
