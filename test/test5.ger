@@ -42,6 +42,6 @@ start
         print 'naveen hettiwaththa!';
     }
 
-    newArray [0];
+    newArray[0];
 
 end

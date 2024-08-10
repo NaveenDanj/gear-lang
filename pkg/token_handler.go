@@ -67,6 +67,7 @@ func (t *TokenDriver) Init() {
 	t.Validator[')'] = 1
 	t.Validator['('] = 1
 	t.Validator[']'] = 1
+	t.Validator['['] = 1
 	t.Validator[';'] = 1
 	t.Validator[':'] = 1
 	t.Validator[','] = 1
@@ -147,10 +148,11 @@ func (t *TokenDriver) Tokenizer(lexemeList []Lexeme) {
 
 			isKeyword := checkAndParseKeyword(str, t)
 
-			fmt.Println("is left bracket => ", lex.LexType == "LEFT_BRACKET", str)
+			fmt.Println("is left bracket => ", lex.LexType == "LEFT_BRACKET", str, isKeyword)
 
 			if !isKeyword {
 				if CheckIsIdentifier(str) {
+					fmt.Println("it is a identifier", str, str[0] == ' ')
 					checkAndParseIdentifier(str, t)
 				}
 			}
