@@ -54,8 +54,6 @@ func parsePrimaryExpression(tokens []lib.Token, index int) (*lib.Expression, int
 	switch token.Type {
 	case "NUMERIC_LITERAL", "IDENTIFIER", "STRING_LITERAL", "FunctionCallExpressionToken", "ArrayIndexAccessExpression":
 
-		fmt.Println("Elem => ", token.Type)
-
 		if token.Type == "IDENTIFIER" {
 			if IsPropertyExpressions(token.Value) {
 				struct_expr := HandleParsePropertyExpressions(token.Value, index, "")
@@ -294,10 +292,7 @@ func HandleAccessArrayIndexExpression(tokens []lib.Token, index int, closeBracke
 
 	for tokens[closeBracket+1].Type == "LEFT_BRACKET" {
 		newCloseBracket := GetArrayIndexAccessMatchingBracket(tokens, closeBracket+1)
-		// fmt.Println("Is is ------------------------------> ", tokens[closeBracket+2:newCloseBracket])
 		arrExpr, _ := HandleAccessArrayIndexExpression(tokens, closeBracket+2, newCloseBracket)
-		// fmt.Printf("%#v\n", arrExpr)
-		// fmt.Print("arr ----> ", tokens[closeBracket+2:newCloseBracket+1])
 		newArrayExpression.IndexExpression = append(newArrayExpression.IndexExpression, arrExpr.IndexExpression[0])
 		closeBracket = newCloseBracket
 	}
@@ -308,19 +303,12 @@ func HandleAccessArrayIndexExpression(tokens []lib.Token, index int, closeBracke
 
 func HandleParseArrayIndexAccessExpressionWrapper(tokens []lib.Token, index int) (lib.ArrayIndexAccessExpression, int) {
 	closeBracket := GetArrayIndexAccessMatchingBracket(tokens, index)
-	outArrayExpression, _ := HandleAccessArrayIndexExpression(tokens, index+1, closeBracket)
-	// fmt.Println("all covered : ", outArrayExpression.IndexExpression)
-	// for tokens[closeBracket+1].Type == "LEFT_BRACKET" {
-	// 	newCloseBracket := GetArrayIndexAccessMatchingBracket(tokens, closeBracket+1)
-	// 	// fmt.Println("Is is ------------------------------> ", tokens[closeBracket+2:newCloseBracket])
-	// 	arrExpr, _ := HandleAccessArrayIndexExpression(tokens, closeBracket+2, newCloseBracket)
-	// 	fmt.Printf("%#v\n", arrExpr)
-	// 	// fmt.Print("arr ----> ", tokens[closeBracket+2:newCloseBracket+1])
-	// 	outArrayExpression.IndexExpression = append(outArrayExpression.IndexExpression, arrExpr.IndexExpression[0])
-	// 	closeBracket = newCloseBracket
-	// }
+	outArrayExpression, newIndex := HandleAccessArrayIndexExpression(tokens, index+1, closeBracket)
+	return outArrayExpression, newIndex
+}
 
-	return outArrayExpression, closeBracket
+// base function for picking correct parsing function for the expression
+func HandleParseExpressionBaseMethod() {
 
 }
 

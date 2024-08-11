@@ -60,20 +60,10 @@ func (ast *ASTBuilder) Parse(index int) {
 			ast.CurrentStatementIndex = closeParan
 
 		} else if ast.TokenList[ast.CurrentStatementIndex].Type == "IDENTIFIER" && ast.TokenList[ast.CurrentStatementIndex+1].Type == "LEFT_BRACKET" {
-			// closeBracket := util.GetArrayIndexAccessMatchingBracket(ast.TokenList, ast.CurrentStatementIndex+1)
-			// arrExpr, newIndex := util.HandleAccessArrayIndexExpression(ast.TokenList, ast.CurrentStatementIndex+2, closeBracket)
-			// fmt.Println("Expression length : ")
-			// fmt.Printf("%#v\n", arrExpr.IndexExpression[0].Right)
-
-			// ast.CurrentStatementIndex = newIndex
-
 			arrExpr, newIndex := util.HandleParseArrayIndexAccessExpressionWrapper(ast.TokenList, ast.CurrentStatementIndex+1)
-			fmt.Println("Array is ------>")
-			fmt.Printf("%#v\n", arrExpr.IndexExpression)
+			fmt.Printf("%#v\n", arrExpr.IndexExpression[0])
 			ast.CurrentStatementIndex = newIndex
 		}
-
-		// check whether the token is a possible array index reference expression
 
 	}
 
