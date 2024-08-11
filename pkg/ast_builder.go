@@ -61,7 +61,7 @@ func (ast *ASTBuilder) Parse(index int) {
 
 		} else if ast.TokenList[ast.CurrentStatementIndex].Type == "IDENTIFIER" && ast.TokenList[ast.CurrentStatementIndex+1].Type == "LEFT_BRACKET" {
 			arrExpr, newIndex := util.HandleParseArrayIndexAccessExpressionWrapper(ast.TokenList, ast.CurrentStatementIndex+1)
-			fmt.Printf("%#v\n", arrExpr.IndexExpression[0])
+			fmt.Printf("%#v\n", arrExpr.IndexExpression)
 			ast.CurrentStatementIndex = newIndex
 		}
 

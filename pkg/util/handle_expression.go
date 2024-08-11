@@ -49,6 +49,8 @@ func parsePrimaryExpression(tokens []lib.Token, index int) (*lib.Expression, int
 		return nil, index, fmt.Errorf("unexpected end of tokens")
 	}
 
+	tokens = BaseExpressionParser(tokens)
+	fmt.Println("Expression tokens are ----> ", tokens)
 	token := tokens[index]
 
 	switch token.Type {
@@ -213,6 +215,12 @@ func HandlePreProcessFunctionCallExpression(tokens []lib.Token, index int, close
 
 }
 
+func HandleParseFunctionCallExpressionWrapper(tokens []lib.Token, index int) (lib.FunctionCallExpression, int) {
+	close := GetFunctionCallerMatchingParan(tokens, index)
+	outFuncExpr, newIndex := HandlePreProcessFunctionCallExpression(tokens, index+1, close)
+	return outFuncExpr, newIndex
+}
+
 // Handle access array index function
 func HandleAccessArrayIndexExpression(tokens []lib.Token, index int, closeBracket int) (lib.ArrayIndexAccessExpression, int) {
 
@@ -308,7 +316,68 @@ func HandleParseArrayIndexAccessExpressionWrapper(tokens []lib.Token, index int)
 }
 
 // base function for picking correct parsing function for the expression
-func HandleParseExpressionBaseMethod() {
+func BaseExpressionParser(tokens []lib.Token) []lib.Token {
+
+	outList := make([]lib.Token, 0)
+	index := 0
+
+	// terminator can be any terminal lexeme such as SEMICOLON, RIGHT_PARANTHESES or RIGHT_BRACKET or RIGHT_BRACE
+	for index < len(tokens) {
+		// try to guess the type of expression in a switch
+
+		if tokens[index].Type == "LEFT_BRACKET" && tokens[index-1].Type == "IDENTIFIER" {
+			expr, newIndex := HandleParseArrayIndexAccessExpressionWrapper(tokens, index)
+
+			newToken := lib.Token{
+				Type:  "ArrayIndexAccessExpression",
+				Other: expr,
+			}
+
+			outList = append(outList, newToken)
+			index = newIndex
+			continue
+		} else if tokens[index].Type == "LEFT_PARANTHESES" && tokens[index-1].Type == "IDENTIFIER" {
+			expr, newIndex := HandleParseFunctionCallExpressionWrapper(tokens, index)
+
+			newToken := lib.Token{
+				Type:  "FunctionCallExpressionToken",
+				Other: expr,
+			}
+
+			outList = append(outList, newToken)
+
+			index = newIndex
+			continue
+		} else {
+
+			// remove array indentifier after parsing the array
+			// remove the function identifier after parsing the function
+			// // remove if have object referencing expression identifier after parsing it
+
+			if index+1 < len(tokens) {
+				if tokens[index].Type == "IDENTIFIER" && tokens[index+1].Type != "LEFT_PARANTHESES" {
+					index++
+					continue
+				} else if tokens[index].Type == "IDENTIFIER" && tokens[index+1].Type != "LEFT_BRACKET" {
+					index++
+					continue
+				}
+			}
+
+			outList = append(outList, tokens[index])
+			// }
+
+			// fmt.Println("Index data and other details -------> ", index, len(tokens)-2)
+
+		}
+
+		index++
+
+	}
+
+	// handle parse the tokens after preprocessing the token list
+
+	return outList
 
 }
 

@@ -1,4 +1,4 @@
 start
     import 'newpackage.ger';
-    newArray[ myFunc(x,y) + 1 ][1][2][ x[2+3]];
+    newArray[ myFunc(x,y) + 1 ][1][2][4 + x[8+3]];
 end
