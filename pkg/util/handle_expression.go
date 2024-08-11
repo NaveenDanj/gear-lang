@@ -52,7 +52,7 @@ func parsePrimaryExpression(tokens []lib.Token, index int) (*lib.Expression, int
 	token := tokens[index]
 
 	switch token.Type {
-	case "NUMERIC_LITERAL", "IDENTIFIER", "STRING_LITERAL", "FunctionCallExpressionToken":
+	case "NUMERIC_LITERAL", "IDENTIFIER", "STRING_LITERAL", "FunctionCallExpressionToken", "ArrayIndexAccessExpression":
 
 		fmt.Println("Elem => ", token.Type)
 
@@ -63,6 +63,9 @@ func parsePrimaryExpression(tokens []lib.Token, index int) (*lib.Expression, int
 				return &expr_val, index + 1, nil
 			}
 		} else if token.Type == "FunctionCallExpressionToken" {
+			expr_val := lib.Expression{Value: token}
+			return &expr_val, index + 1, nil
+		} else if token.Type == "ArrayIndexAccessExpression" {
 			expr_val := lib.Expression{Value: token}
 			return &expr_val, index + 1, nil
 		}
@@ -217,19 +220,19 @@ func HandleAccessArrayIndexExpression(tokens []lib.Token, index int, closeBracke
 
 	// find the last couple of brackets of the array index access expression
 	exprTokenList := make([]lib.Token, 0)
-	arrayName := tokens[index-1].Value
+	arrayName := tokens[index-2].Value
 	bracketExprList := make([]*lib.Expression, 0)
 
-	for index < closeBracket {
+	for index <= closeBracket {
 
 		token := tokens[index]
 
 		if token.Type == "LEFT_BRACKET" {
 
 			// get the last closing bracket index
-			closeBracket := GetArrayIndexAccessMatchingBracket(tokens, index)
+			_closeBracket := GetArrayIndexAccessMatchingBracket(tokens, index)
 			// recursively call the handle access array index expression function
-			outElem, _ := HandleAccessArrayIndexExpression(tokens, index+1, closeBracket)
+			outElem, _ := HandleAccessArrayIndexExpression(tokens, index+1, _closeBracket)
 
 			newToken := lib.Token{
 				Type:  "ArrayIndexAccessExpression",
@@ -238,7 +241,7 @@ func HandleAccessArrayIndexExpression(tokens []lib.Token, index int, closeBracke
 
 			exprTokenList = append(exprTokenList, newToken)
 
-			index = closeBracket + 1
+			index = _closeBracket + 1
 			continue
 
 		} else if token.Type == "RIGHT_BRACKET" && index == closeBracket {
@@ -257,9 +260,26 @@ func HandleAccessArrayIndexExpression(tokens []lib.Token, index int, closeBracke
 				IndexExpression: bracketExprList,
 			}
 
-			return newArrayExpression, index + 1
+			newToken := lib.Token{
+				Type:  "ArrayIndexAccessExpression",
+				Other: newArrayExpression,
+			}
+
+			exprTokenList = append(exprTokenList, newToken)
+
+			if tokens[closeBracket+1].Type == "LEFT_BRACKET" {
+				break
+			}
+
+			return newArrayExpression, index
 
 		} else {
+
+			if token.Type == "IDENTIFIER" && tokens[index+1].Type == "LEFT_BRACKET" {
+				index++
+				continue
+			}
+
 			exprTokenList = append(exprTokenList, tokens[index])
 		}
 
@@ -272,7 +292,35 @@ func HandleAccessArrayIndexExpression(tokens []lib.Token, index int, closeBracke
 		IndexExpression: bracketExprList,
 	}
 
+	for tokens[closeBracket+1].Type == "LEFT_BRACKET" {
+		newCloseBracket := GetArrayIndexAccessMatchingBracket(tokens, closeBracket+1)
+		// fmt.Println("Is is ------------------------------> ", tokens[closeBracket+2:newCloseBracket])
+		arrExpr, _ := HandleAccessArrayIndexExpression(tokens, closeBracket+2, newCloseBracket)
+		// fmt.Printf("%#v\n", arrExpr)
+		// fmt.Print("arr ----> ", tokens[closeBracket+2:newCloseBracket+1])
+		newArrayExpression.IndexExpression = append(newArrayExpression.IndexExpression, arrExpr.IndexExpression[0])
+		closeBracket = newCloseBracket
+	}
+
 	return newArrayExpression, closeBracket + 1
+
+}
+
+func HandleParseArrayIndexAccessExpressionWrapper(tokens []lib.Token, index int) (lib.ArrayIndexAccessExpression, int) {
+	closeBracket := GetArrayIndexAccessMatchingBracket(tokens, index)
+	outArrayExpression, _ := HandleAccessArrayIndexExpression(tokens, index+1, closeBracket)
+	// fmt.Println("all covered : ", outArrayExpression.IndexExpression)
+	// for tokens[closeBracket+1].Type == "LEFT_BRACKET" {
+	// 	newCloseBracket := GetArrayIndexAccessMatchingBracket(tokens, closeBracket+1)
+	// 	// fmt.Println("Is is ------------------------------> ", tokens[closeBracket+2:newCloseBracket])
+	// 	arrExpr, _ := HandleAccessArrayIndexExpression(tokens, closeBracket+2, newCloseBracket)
+	// 	fmt.Printf("%#v\n", arrExpr)
+	// 	// fmt.Print("arr ----> ", tokens[closeBracket+2:newCloseBracket+1])
+	// 	outArrayExpression.IndexExpression = append(outArrayExpression.IndexExpression, arrExpr.IndexExpression[0])
+	// 	closeBracket = newCloseBracket
+	// }
+
+	return outArrayExpression, closeBracket
 
 }
 
@@ -323,7 +371,7 @@ func GetArrayIndexAccessMatchingBracket(tokens []lib.Token, index int) int {
 
 		}
 
-		return -1
+		index++
 	}
 
 	return index

@@ -1,5 +1,4 @@
 start
-
-    newArray[0];
-
+    import 'newpackage.ger';
+    newArray[0][1][2][3];
 end
