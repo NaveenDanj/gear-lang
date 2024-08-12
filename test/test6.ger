@@ -1,4 +1,4 @@
 start
     import 'newpackage.ger';
-    newArray[ myFunc(x,y) + 1 ][1][2][4 + x[8+3]];
+    let ArrayList test = [1,2,3 , [4,5,6]];
 end

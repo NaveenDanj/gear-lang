@@ -99,7 +99,9 @@ Gear Lang is a new programming language built using Go. It is designed to be sim
 - [x] Add language support for arrays and other required data types
 - [ ] Language support for
   - [x] function calling
-  - [ ] object property referencing 
+  - [ ] object property referencing.
+  - [x] accessing array indexes
+  - [x] parsing array expressions 
 - Complete the standard library implementation
 - Improve error handling and reporting
 - Enhance the language documentation

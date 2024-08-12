@@ -226,7 +226,10 @@ func HandleAccessArrayIndexExpression(tokens []lib.Token, index int, closeBracke
 
 	// find the last couple of brackets of the array index access expression
 	exprTokenList := make([]lib.Token, 0)
-	arrayName := tokens[index-2].Value
+	arrayName := ""
+	if len(tokens) >= 3 {
+		arrayName = tokens[index-2].Value
+	}
 	bracketExprList := make([]*lib.Expression, 0)
 
 	for index <= closeBracket {
@@ -325,7 +328,7 @@ func BaseExpressionParser(tokens []lib.Token) []lib.Token {
 	for index < len(tokens) {
 		// try to guess the type of expression in a switch
 
-		if tokens[index].Type == "LEFT_BRACKET" && tokens[index-1].Type == "IDENTIFIER" {
+		if index >= 1 && tokens[index].Type == "LEFT_BRACKET" && tokens[index-1].Type == "IDENTIFIER" {
 			expr, newIndex := HandleParseArrayIndexAccessExpressionWrapper(tokens, index)
 
 			newToken := lib.Token{
@@ -336,7 +339,8 @@ func BaseExpressionParser(tokens []lib.Token) []lib.Token {
 			outList = append(outList, newToken)
 			index = newIndex
 			continue
-		} else if tokens[index].Type == "LEFT_PARANTHESES" && tokens[index-1].Type == "IDENTIFIER" {
+
+		} else if index >= 1 && tokens[index].Type == "LEFT_PARANTHESES" && tokens[index-1].Type == "IDENTIFIER" {
 			expr, newIndex := HandleParseFunctionCallExpressionWrapper(tokens, index)
 
 			newToken := lib.Token{
@@ -345,14 +349,22 @@ func BaseExpressionParser(tokens []lib.Token) []lib.Token {
 			}
 
 			outList = append(outList, newToken)
+			index = newIndex
+			continue
 
+		} else if tokens[index].Type == "LEFT_BRACKET" {
+			fmt.Println("Possible array expression ----> ", tokens[index])
+			expr, newIndex := ParseArrayExpressionWrapper(tokens, index)
+
+			newToken := lib.Token{
+				Type:  "ArrayIndexAccessExpression",
+				Other: expr,
+			}
+
+			outList = append(outList, newToken)
 			index = newIndex
 			continue
 		} else {
-
-			// remove array indentifier after parsing the array
-			// remove the function identifier after parsing the function
-			// // remove if have object referencing expression identifier after parsing it
 
 			if index+1 < len(tokens) {
 				if tokens[index].Type == "IDENTIFIER" && tokens[index+1].Type != "LEFT_PARANTHESES" {
@@ -365,17 +377,11 @@ func BaseExpressionParser(tokens []lib.Token) []lib.Token {
 			}
 
 			outList = append(outList, tokens[index])
-			// }
-
-			// fmt.Println("Index data and other details -------> ", index, len(tokens)-2)
-
 		}
 
 		index++
 
 	}
-
-	// handle parse the tokens after preprocessing the token list
 
 	return outList
 

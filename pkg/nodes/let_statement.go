@@ -20,7 +20,7 @@ func HandleVariableDeclarationStatement(tokenList []lib.Token, index int) (int, 
 
 	// TODO: have to handle expression strings
 	if tokenList[index+4].Type == "LEFT_BRACKET" {
-		expr, _ := util.ParseArrayExpression(tokenList, index+4)
+		expr, _ := util.ParseArrayExpressionWrapper(tokenList, index+4)
 		// printElem := expr.Elements.([]lib.ArrayExpressionElement)
 		// fmt.Println("Array expression -> ", reflect.TypeOf(expr.Elements))
 		// fmt.Printf("%#v\n", expr)
