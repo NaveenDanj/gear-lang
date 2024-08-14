@@ -45,6 +45,7 @@ func ParseExpression(index int, tokens []lib.Token, rlist []lib.Token) (*lib.Exp
 
 // Helper function to parse a primary expression (number, identifier, or parenthesized expression)
 func parsePrimaryExpression(tokens []lib.Token, index int) (*lib.Expression, int, error) {
+
 	if index >= len(tokens) {
 		return nil, index, fmt.Errorf("unexpected end of tokens")
 	}
@@ -324,7 +325,6 @@ func BaseExpressionParser(tokens []lib.Token) []lib.Token {
 	outList := make([]lib.Token, 0)
 	index := 0
 
-	// terminator can be any terminal lexeme such as SEMICOLON, RIGHT_PARANTHESES or RIGHT_BRACKET or RIGHT_BRACE
 	for index < len(tokens) {
 		// try to guess the type of expression in a switch
 
@@ -353,7 +353,7 @@ func BaseExpressionParser(tokens []lib.Token) []lib.Token {
 			continue
 
 		} else if tokens[index].Type == "LEFT_BRACKET" {
-			fmt.Println("Possible array expression ----> ", tokens[index])
+			fmt.Println("Possible array expression ----> ", index)
 			expr, newIndex := ParseArrayExpressionWrapper(tokens, index)
 
 			newToken := lib.Token{
@@ -388,6 +388,7 @@ func BaseExpressionParser(tokens []lib.Token) []lib.Token {
 }
 
 func GetFunctionCallerMatchingParan(tokens []lib.Token, index int) int {
+
 	stack := make([]lib.Token, 0)
 
 	for index < len(tokens) {
@@ -412,6 +413,7 @@ func GetFunctionCallerMatchingParan(tokens []lib.Token, index int) int {
 	}
 
 	return -1
+
 }
 
 func GetArrayIndexAccessMatchingBracket(tokens []lib.Token, index int) int {

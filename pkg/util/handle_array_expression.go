@@ -6,9 +6,11 @@ import (
 )
 
 func ParseArrayExpression(list []lib.Token, startIndex int, end int) (lib.ArrayExpressionElement, int) {
+
 	arrList := make([]lib.ArrayExpressionElement, 0) // Changed to interface{} to accommodate both arrays and individual elements
 	lastElemIndex := startIndex
 	index := startIndex
+	tokenList := make([]lib.Token, 0)
 
 	for index <= end {
 		token := list[index]
@@ -37,12 +39,15 @@ func ParseArrayExpression(list []lib.Token, startIndex int, end int) (lib.ArrayE
 				arrList = append(arrList, lib.ArrayExpressionElement{Elements: expr})
 			}
 			lastElemIndex = index + 1
+		} else {
+			tokenList = append(tokenList, token)
 		}
 		index++
 	}
 
 	return arrList[0], index
 }
+
 
 func ParseArrayExpressionWrapper(list []lib.Token, startIndex int) (lib.ArrayExpressionElement, int) {
 	terminalIndex := GetArrayIndexAccessMatchingBracket(list, startIndex)
