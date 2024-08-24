@@ -1,4 +1,4 @@
 start
     import 'newpackage.ger';
-    let ArrayList test = [1,2,3 , [4,5,6] , newFunc(x , y) ];
+    oldArr[1 + 23];
 end
