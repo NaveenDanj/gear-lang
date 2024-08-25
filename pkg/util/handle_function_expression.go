@@ -64,6 +64,32 @@ func HandlePreProcessFunctionCallExpression(tokens []lib.Token, index int, close
 
 			// update the lastSepIndex value
 			// lastSepIndex = index + 1
+
+		} else if token.Type == "LEFT_BRACKET" && tokens[index-1].Type == "IDENTIFIER" {
+			// parse array index access expression
+			expr, newIndex := HandleParseArrayIndexAccessExpressionWrapper(tokens, index)
+
+			newToken := lib.Token{
+				Type:  "ArrayIndexAccessExpression",
+				Other: expr,
+			}
+
+			funcTokenList = append(funcTokenList, newToken)
+			index = newIndex
+			continue
+
+		} else if token.Type == "LEFT_BRACKET" {
+			// parse array expressions
+			expr, newIndex := ParseArrayExpressionWrapper(tokens, index)
+
+			newToken := lib.Token{
+				Type:  "ArrayIndexAccessExpression",
+				Other: expr,
+			}
+
+			funcTokenList = append(funcTokenList, newToken)
+			index = newIndex
+			continue
 		} else {
 			// ignore
 
@@ -90,6 +116,7 @@ func HandleParseFunctionCallExpressionWrapper(tokens []lib.Token, index int) (li
 	close := GetFunctionCallerMatchingParan(tokens, index)
 	outFuncExpr, newIndex := HandlePreProcessFunctionCallExpression(tokens, index+1, close)
 	return outFuncExpr, newIndex
+
 }
 
 func GetFunctionCallerMatchingParan(tokens []lib.Token, index int) int {

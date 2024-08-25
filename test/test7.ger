@@ -1,4 +1,4 @@
 start
     let ArrayList arr = [1,2,3];
-    myFunc([12,3]);
+    myFunc([4,5,6 , myFunc(x + y)]);
 end
