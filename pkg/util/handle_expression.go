@@ -51,9 +51,10 @@ func parsePrimaryExpression(tokens []lib.Token, index int) (*lib.Expression, int
 		return nil, index, fmt.Errorf("unexpected end of tokens")
 	}
 
-	tokens = BaseExpressionParser(tokens)
 	fmt.Println("Expression tokens are ----> ", tokens)
+	tokens = BaseExpressionParser(tokens)
 	token := tokens[index]
+	fmt.Println("Expression tokens are out ----> ", tokens, token)
 
 	switch token.Type {
 	case "NUMERIC_LITERAL", "IDENTIFIER", "STRING_LITERAL", "FunctionCallExpressionToken", "ArrayIndexAccessExpression":
@@ -102,8 +103,6 @@ func ParseExpressionTokens(tokens []lib.Token) (*lib.Expression, error) {
 
 // Base function for picking correct parsing function for the expression
 func BaseExpressionParser(tokens []lib.Token) []lib.Token {
-	// outList := make([]lib.Token, 0)
-	// index := 0
 	outList, _ := CommonLoopFunction(tokens, 0)
 	return outList
 }
@@ -111,6 +110,7 @@ func BaseExpressionParser(tokens []lib.Token) []lib.Token {
 // this helper function can be used to parse expression inside another expression
 func IntermediateBaseExpressionParser(tokens []lib.Token) ([]lib.Token, int) {
 	outList, index := CommonLoopFunction(tokens, 0)
+	fmt.Println("Common loop : ", outList)
 	return outList, index
 }
 
@@ -121,7 +121,6 @@ func CommonLoopFunction(tokens []lib.Token, index int) ([]lib.Token, int) {
 
 	for index < len(tokens) {
 		// try to guess the type of expression in a switch
-
 		if index >= 1 && tokens[index].Type == "LEFT_BRACKET" && tokens[index-1].Type == "IDENTIFIER" {
 			expr, newIndex := HandleParseArrayIndexAccessExpressionWrapper(tokens, index)
 
@@ -161,9 +160,11 @@ func CommonLoopFunction(tokens []lib.Token, index int) ([]lib.Token, int) {
 
 			if index+1 < len(tokens) {
 				if tokens[index].Type == "IDENTIFIER" && tokens[index+1].Type != "LEFT_PARANTHESES" {
+					outList = append(outList, tokens[index])
 					index++
 					continue
 				} else if tokens[index].Type == "IDENTIFIER" && tokens[index+1].Type != "LEFT_BRACKET" {
+					outList = append(outList, tokens[index])
 					index++
 					continue
 				}

@@ -27,22 +27,21 @@ func HandlePreProcessFunctionCallExpression(tokens []lib.Token, index int, close
 				Other: newToken,
 			})
 
-			// argumentList = append(argumentList, newToken)
-
 			index = newIndex
 			continue
 
 		} else if token.Type == "RIGHT_PARANTHESES" && index == closeParan {
 			// create the function call token and return it with the updated index
 
-			expr, err := ParseExpressionTokens(funcTokenList)
+			if len(funcTokenList) != 0 {
+				expr, err := ParseExpressionTokens(funcTokenList)
 
-			if err != nil {
-				panic("Error while parsing argument expression!")
+				if err != nil {
+					panic("Error while parsing argument expression!" + err.Error())
+				}
+
+				argumentList = append(argumentList, expr)
 			}
-
-			argumentList = append(argumentList, expr)
-
 			// funcTokenList = make([]lib.Token, 0)
 			funcCallExpressionToken := lib.FunctionCallExpression{
 				FunctionName: funcName,

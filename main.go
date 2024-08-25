@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	content, err := os.ReadFile("test/test6.ger")
+	content, err := os.ReadFile("test/test7.ger")
 	if err != nil {
 		log.Fatal("Failed to parse the file: File not found!")
 		return
