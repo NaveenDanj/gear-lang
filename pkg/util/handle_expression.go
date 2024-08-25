@@ -5,6 +5,7 @@ import (
 	"gear-lang/pkg/lib"
 )
 
+// Main function to parse binary expressions
 func ParseExpression(index int, tokens []lib.Token, rlist []lib.Token) (*lib.Expression, int, error) {
 	if index >= len(tokens) {
 		return nil, index, fmt.Errorf("unexpected end of tokens")
@@ -99,11 +100,24 @@ func ParseExpressionTokens(tokens []lib.Token) (*lib.Expression, error) {
 	return result, err
 }
 
-// base function for picking correct parsing function for the expression
+// Base function for picking correct parsing function for the expression
 func BaseExpressionParser(tokens []lib.Token) []lib.Token {
+	// outList := make([]lib.Token, 0)
+	// index := 0
+	outList, _ := CommonLoopFunction(tokens, 0)
+	return outList
+}
+
+// this helper function can be used to parse expression inside another expression
+func IntermediateBaseExpressionParser(tokens []lib.Token) ([]lib.Token, int) {
+	outList, index := CommonLoopFunction(tokens, 0)
+	return outList, index
+}
+
+// TODO:common for loop func : probably should give meaningful name for this later
+func CommonLoopFunction(tokens []lib.Token, index int) ([]lib.Token, int) {
 
 	outList := make([]lib.Token, 0)
-	index := 0
 
 	for index < len(tokens) {
 		// try to guess the type of expression in a switch
@@ -133,7 +147,6 @@ func BaseExpressionParser(tokens []lib.Token) []lib.Token {
 			continue
 
 		} else if tokens[index].Type == "LEFT_BRACKET" {
-			fmt.Println("Possible array expression ----> ", index)
 			expr, newIndex := ParseArrayExpressionWrapper(tokens, index)
 
 			newToken := lib.Token{
@@ -163,6 +176,6 @@ func BaseExpressionParser(tokens []lib.Token) []lib.Token {
 
 	}
 
-	return outList
+	return outList, index
 
 }
