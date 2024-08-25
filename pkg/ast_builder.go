@@ -57,6 +57,9 @@ func (ast *ASTBuilder) Parse(index int) {
 				})
 			}
 
+			fmt.Println("Function call expression ------------>")
+			fmt.Printf("%#v\n", funcExpr.Arguments[2])
+
 			ast.CurrentStatementIndex = closeParan
 
 		} else if ast.TokenList[ast.CurrentStatementIndex].Type == "IDENTIFIER" && ast.TokenList[ast.CurrentStatementIndex+1].Type == "LEFT_BRACKET" {
