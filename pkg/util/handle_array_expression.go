@@ -1,7 +1,6 @@
 package util
 
 import (
-	"fmt"
 	"gear-lang/pkg/lib"
 )
 
@@ -52,7 +51,6 @@ func ParseArrayExpression(list []lib.Token, startIndex int, end int) (lib.ArrayE
 
 func ParseArrayExpressionWrapper(list []lib.Token, startIndex int) (lib.ArrayExpressionElement, int) {
 	terminalIndex := GetArrayIndexAccessMatchingBracket(list, startIndex)
-	fmt.Println("End bracket is ----> ", list[startIndex:terminalIndex+1])
 	ParseArrayExpression, _ := ParseArrayExpression(list, startIndex, terminalIndex+1)
 	return ParseArrayExpression, terminalIndex + 1
 }

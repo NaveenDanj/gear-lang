@@ -146,6 +146,7 @@ func CommonLoopFunction(tokens []lib.Token, index int) ([]lib.Token, int) {
 			continue
 
 		} else if tokens[index].Type == "LEFT_BRACKET" {
+			fmt.Println("Got there!!! --------------> ", index, tokens[index])
 			expr, newIndex := ParseArrayExpressionWrapper(tokens, index)
 
 			newToken := lib.Token{

@@ -1,4 +1,8 @@
 start
-    let ArrayList arr = [1,2,3];
-    myFunc([4,5,6 , myFunc(x + y)] , 1 + 2 , student:name);
+    let ArrayList arr = [
+                            1,
+                            2,
+                            3, 
+                            [4,5,6]
+                        ];
 end
