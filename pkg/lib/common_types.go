@@ -126,3 +126,6 @@ type ArrayIndexAccessExpression struct {
 	ArrayName       string
 	IndexExpression []*Expression
 }
+
+// -------------------------------- new types ---------------------------------------
+

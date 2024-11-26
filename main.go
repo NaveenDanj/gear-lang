@@ -29,5 +29,6 @@ func main() {
 	tokenDriver.Init()
 	tokenDriver.Tokenizer(driver.LexList)
 	astBuilder.TokenList = tokenDriver.TokenList
-	astBuilder.Parse(0)
+	// fmt.Print(astBuilder.TokenList)
+	astBuilder.Parse()
 }

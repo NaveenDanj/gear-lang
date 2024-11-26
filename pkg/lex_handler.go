@@ -196,6 +196,23 @@ func (d *LexemeDriver) CheckLexeme(char string) {
 
 		d.LexList = append(d.LexList, new_lex)
 
+	} else if char == "<" {
+
+		new_lex := Lexeme{
+			LexType: "LESS_THAN_OPERATOR",
+			Value:   "<",
+		}
+
+		d.LexList = append(d.LexList, new_lex)
+	} else if char == ">" {
+
+		new_lex := Lexeme{
+			LexType: "GRATER_THAN_OPERATOR",
+			Value:   ">",
+		}
+
+		d.LexList = append(d.LexList, new_lex)
+
 	} else if IsLetter(char) {
 		new_lex := Lexeme{
 			LexType: "LETTER",

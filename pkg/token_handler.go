@@ -18,9 +18,11 @@ func (t *TokenDriver) Init() {
 		"int",
 		"string",
 		"boolean",
+		"real",
+		"break",
+		"continue",
 		"start",
 		"end",
-		"real",
 		"print",
 		"function",
 		"export",
@@ -46,6 +48,8 @@ func (t *TokenDriver) Init() {
 	t.Operators["DOT_OPERATOR"] = 1
 	t.Operators["PIPE_OPERATOR"] = 1
 	t.Operators["AND_OPERATOR"] = 1
+	// t.Operators["LESS_THAN_OPERATOR"] = 1
+	// t.Operators["GRATER_THAN_OPERATOR"] = 1
 
 	t.Numbers = make(map[byte]int)
 
@@ -76,6 +80,8 @@ func (t *TokenDriver) Init() {
 	t.Validator['/'] = 1
 	t.Validator[' '] = 1
 	t.Validator['.'] = 1
+	t.Validator['<'] = 1
+	t.Validator['>'] = 1
 
 }
 
@@ -143,7 +149,9 @@ func (t *TokenDriver) Tokenizer(lexemeList []Lexeme) {
 			t.Operators[lex.LexType] != 0 ||
 			lex.LexType == "RIGHT_BRACKET" ||
 			lex.LexType == "LEFT_BRACKET" ||
-			lex.LexType == "SEMICOLON" {
+			lex.LexType == "SEMICOLON" ||
+			lex.LexType == "GRATER_THAN_OPERATOR" ||
+			lex.LexType == "LESS_THAN_OPERATOR" {
 
 			isKeyword := checkAndParseKeyword(str, t)
 
