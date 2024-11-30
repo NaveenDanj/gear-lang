@@ -25,6 +25,7 @@ func (t *TokenDriver) Init() {
 		"end",
 		"print",
 		"function",
+		"property",
 		"export",
 		"import",
 		"if",

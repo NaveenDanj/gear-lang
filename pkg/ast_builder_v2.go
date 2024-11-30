@@ -11,7 +11,6 @@ type ASTBuilder struct {
 	TokenList             []lib.Token
 }
 
-// main parsing function to start parsing
 func (ast *ASTBuilder) Parse() {
 	ast.CurrentStatementIndex = 0
 
@@ -29,7 +28,6 @@ func (ast *ASTBuilder) Parse() {
 	}
 }
 
-// to parse each and every statement in the program
 func (ast *ASTBuilder) ParseStatement(index int) (lib.IStatement[any], int) {
 
 	if ast.TokenList[index].Type == "LEFT_BRACE" {
@@ -44,7 +42,6 @@ func (ast *ASTBuilder) ParseStatement(index int) (lib.IStatement[any], int) {
 	return lib.IStatement[any]{}, index + 1
 }
 
-// to parse block statements essentially we'll have to use ParseStatement function inside of this function
 func (ast *ASTBuilder) ParseBlock(index int) (lib.IBlockStatement, int) {
 	stack := 1
 	counter := index + 1
@@ -54,7 +51,6 @@ func (ast *ASTBuilder) ParseBlock(index int) (lib.IBlockStatement, int) {
 		Statements: make([]lib.IStatement[any], 0),
 	}
 
-	// find the end of block statement
 	for stack != 0 && counter < len(ast.TokenList) {
 		if ast.TokenList[counter].Type == "RIGHT_BRACE" {
 			stack -= 1
