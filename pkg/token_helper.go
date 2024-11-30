@@ -151,6 +151,8 @@ func ParseOperators(str string, index int, lexemeList []Lexeme, t *TokenDriver) 
 	ops["=="] = "DOUBLE_EQUALS_OPERATOR"
 	ops["!="] = "NOT_EQUALS_OPERATOR"
 	ops["<="] = "LESS_THAN_OR_EQUALS_OPERATOR"
+	ops["<"] = "LESS_THAN_OPERATOR"
+	ops[">"] = "GREATER_THAN_OPERATOR"
 	ops[">="] = "GREATER_THAN_OR_EQUALS_OPERATOR"
 	ops["&&"] = "AND_OPERATOR"
 	ops["&"] = "REFERECE_OPERATOR"

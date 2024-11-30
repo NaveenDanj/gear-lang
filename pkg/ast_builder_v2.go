@@ -7,7 +7,7 @@ import (
 
 type ASTBuilder struct {
 	CurrentStatementIndex int
-	Program               lib.Program
+	Program               lib.IProgram
 	TokenList             []lib.Token
 }
 
@@ -21,43 +21,67 @@ func (ast *ASTBuilder) Parse() {
 			break
 		}
 
-		ast.CurrentStatementIndex = ast.ParseStatement(ast.CurrentStatementIndex)
+		newStatement, index := ast.ParseStatement(ast.CurrentStatementIndex)
+		ast.CurrentStatementIndex = index
+		ast.Program.Statements = append(ast.Program.Statements, newStatement)
+		fmt.Println("index : ", newStatement)
+
 	}
 }
 
 // to parse each and every statement in the program
-func (ast *ASTBuilder) ParseStatement(index int) int {
+func (ast *ASTBuilder) ParseStatement(index int) (lib.IStatement[any], int) {
 
 	if ast.TokenList[index].Type == "LEFT_BRACE" {
-		fmt.Print("Left brace \n")
-		return ast.ParseBlock(index)
+		statement := lib.IStatement[any]{
+			StatementType: "BlockStatement",
+		}
+		newStatement, newIndex := ast.ParseBlock(index)
+		statement.Value = newStatement
+		return statement, newIndex
 	}
 
-	return index + 1
+	return lib.IStatement[any]{}, index + 1
 }
 
 // to parse block statements essentially we'll have to use ParseStatement function inside of this function
-func (ast *ASTBuilder) ParseBlock(index int) int {
-	var stack = make([]int, 0)
-	stack = append(stack, index)
-	counter := index
+func (ast *ASTBuilder) ParseBlock(index int) (lib.IBlockStatement, int) {
+	stack := 1
+	counter := index + 1
+	endBlockIndex := counter + 1
 
-	for len(stack) != 0 && counter < len(ast.TokenList) {
+	blockStatement := lib.IBlockStatement{
+		Statements: make([]lib.IStatement[any], 0),
+	}
 
+	// find the end of block statement
+	for stack != 0 && counter < len(ast.TokenList) {
 		if ast.TokenList[counter].Type == "RIGHT_BRACE" {
-			// parse it
-			startIndex := stack[len(stack)-1] + 1
-			endIndex := counter
-
-			str := ast.TokenList[startIndex:endIndex]
-			fmt.Println(str)
-			fmt.Println("======================================")
-			stack = stack[0 : len(stack)-1]
+			stack -= 1
+			if stack == 0 {
+				endBlockIndex = counter
+				break
+			}
+			counter++
+			continue
+		} else if ast.TokenList[counter].Type == "LEFT_BRACE" {
+			stack += 1
 		}
 
 		counter++
-
 	}
 
-	return counter
+	i := index + 1
+
+	for {
+		if i > endBlockIndex {
+			break
+		}
+		newStatement, newIndex := ast.ParseStatement(i)
+		blockStatement.Statements = append(blockStatement.Statements, newStatement)
+		i = newIndex
+	}
+
+	return blockStatement, endBlockIndex
+
 }

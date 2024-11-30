@@ -48,8 +48,8 @@ func (t *TokenDriver) Init() {
 	t.Operators["DOT_OPERATOR"] = 1
 	t.Operators["PIPE_OPERATOR"] = 1
 	t.Operators["AND_OPERATOR"] = 1
-	// t.Operators["LESS_THAN_OPERATOR"] = 1
-	// t.Operators["GRATER_THAN_OPERATOR"] = 1
+	t.Operators["LESS_THAN_OPERATOR"] = 1
+	t.Operators["GRATER_THAN_OPERATOR"] = 1
 
 	t.Numbers = make(map[byte]int)
 

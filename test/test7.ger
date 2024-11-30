@@ -2,28 +2,27 @@ start
 
     let ArrayList<real> arr = [ 142.342, 2, 3, [4,5,6,x] ];
 
-    while(true){
-        print 'hello world';
-
-        if (counter == 0){
-            break;
-        }
-
-        counter = counter + 1;
-    }
-
-    if (x == true & y == false) {
-        print 'Statements are checked!';
+    if (true){
 
         while(true){
             print 'hello world';
 
-            if (counter == 0){
-                break;
+            while(true){
+                print 'hello world';
             }
 
-            counter = counter + 1;
         }
+
+        while(true){
+            print 'hello world';
+
+            while(true){
+                print 'hello world';
+            }
+
+        }
+
+        print 'my name is naveen';
 
     }
 

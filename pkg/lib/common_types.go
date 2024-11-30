@@ -129,3 +129,16 @@ type ArrayIndexAccessExpression struct {
 
 // -------------------------------- new types ---------------------------------------
 
+type IStatement[T any] struct {
+	StatementType string
+	Value         T
+}
+
+type IBlockStatement struct {
+	Type       string
+	Statements []IStatement[any]
+}
+
+type IProgram struct {
+	Statements []IStatement[any]
+}
